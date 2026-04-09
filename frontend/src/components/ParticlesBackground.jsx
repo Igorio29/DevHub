@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
+import { memo } from "react";
 
-export default function ParticlesBackground() {
+function ParticlesBackground() {
   const [init, setInit] = useState(false);
 
   useEffect(() => {
@@ -19,7 +20,7 @@ export default function ParticlesBackground() {
     <Particles
       id="tsparticles"
       options={{
-        fullScreen: { enable: true },
+        fullScreen: { enable: true, zIndex: -1 },
         background: {
           color: "#0b1727",
         },
@@ -44,3 +45,5 @@ export default function ParticlesBackground() {
     />
   );
 }
+
+export default memo(ParticlesBackground);
