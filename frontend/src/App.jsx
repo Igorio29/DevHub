@@ -1,13 +1,28 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Dashboard from "./pages/Dashboard"; // <-- Verifique o caminho real do arquivo
+import { Routes, Route } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
+import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
+    <>
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
+      <ToastContainer 
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+    </>
   );
 }
 
