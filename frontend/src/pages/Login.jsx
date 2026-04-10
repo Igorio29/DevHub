@@ -58,7 +58,6 @@ function Login() {
                     <title>Login - DevHub</title>
                 </Helmet>
             </>
-        // overflow-hidden evita scroll causado pelas partículas
             <div className="relative h-screen w-full bg-[#050a14] overflow-hidden">
 
                 {/* CAMADA 0: Partículas 
@@ -79,53 +78,7 @@ function Login() {
                         </div>
 
                         <div className="space-y-4">
-                            <div>
-                                <label className="text-gray-300 text-sm block mb-1">Email</label>
-                                <input
-                                    required
-                                    type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full p-3 bg-[#0b1727] text-white rounded-lg outline-none 
-                border border-white/5 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 
-                transition placeholder:text-gray-500"
-                                    placeholder="seuemail@email.com"
-                                />
-                            </div>
 
-                            <div>
-                                <label className="text-gray-300 text-sm block mb-1">Senha</label>
-                                <input
-                                    required
-                                    type="password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full p-3 bg-[#0b1727] text-white rounded-lg outline-none 
-                border border-white/5 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 
-                transition placeholder:text-gray-500"
-                                    placeholder="Insira sua senha"
-                                />
-                            </div>
-
-                            <button
-                                type="submit"
-                                disabled={loading}
-                                className={`w-full mt-4 py-3 rounded-lg text-white font-bold transition-all
-                ${loading
-                                        ? "bg-blue-800 opacity-70 cursor-not-allowed"
-                                        : "bg-gradient-to-r from-blue-500 to-blue-600 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-blue-500/20"
-                                    }`}
-                            >
-                                {loading ? (
-                                    <span className="flex items-center justify-center gap-2">
-                                        <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
-                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
-                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                        </svg>
-                                        Entrando...
-                                    </span>
-                                ) : "Entrar"}
-                            </button>
                             <a
                                 href="http://localhost:8000/api/auth/gitlab/redirect"
                                 className="w-full flex items-center justify-center gap-3 mt-4 py-3 rounded-lg 
@@ -141,6 +94,24 @@ function Login() {
                                 />
 
                                 Entrar com GitLab
+                            </a>
+                            <a
+                                className="w-full flex items-center justify-center gap-3 mt-3 py-3 rounded-lg 
+  bg-[#0f1c2e] border border-gray-600
+  text-gray-400 font-semibold shadow-lg
+  cursor-not-allowed opacity-70"
+                            >
+                                <img
+                                    src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg"
+                                    alt="GitHub"
+                                    className="w-5 h-5"
+                                />
+
+                                <span>Entrar com GitHub</span>
+
+                                <span className="text-xs bg-gray-700 px-2 py-1 rounded-full">
+                                    Em breve
+                                </span>
                             </a>
                         </div>
                     </form>
