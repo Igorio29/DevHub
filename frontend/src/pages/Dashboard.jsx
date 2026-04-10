@@ -5,7 +5,8 @@ import { showError, showSuccess } from "../utils/toast";
 
 export default function Dashboard() {
   const navigate = useNavigate();
-
+  const user = JSON.parse(localStorage.getItem("user"));  
+  console.log("USER LOCALSTORAGE:", localStorage.getItem("user"));
   const location = useLocation();
   useEffect(() => {
     console.log("Dashboard - State recebido:", location.state);
@@ -28,7 +29,7 @@ export default function Dashboard() {
         <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
           DevHub Admin
         </h1>
-        <button 
+        <button
           onClick={handleLogout}
           className="bg-red-500/10 hover:bg-red-500/20 text-red-500 px-4 py-2 rounded-lg transition text-sm font-medium"
         >
@@ -39,7 +40,9 @@ export default function Dashboard() {
       {/* Conteúdo Principal */}
       <main className="p-8 max-w-7xl mx-auto">
         <header className="mb-8">
-          <h2 className="text-3xl font-bold">Bem-vindo de volta!</h2>
+          <h2 className="text-3xl font-bold">
+            Bem-vindo de volta{user?.name ? `, ${user.name}` : ""}!
+          </h2>
           <p className="text-gray-400">Aqui está o resumo do seu projeto hoje.</p>
         </header>
 
@@ -50,7 +53,7 @@ export default function Dashboard() {
             <h3 className="text-2xl font-bold mt-1">1,284</h3>
             <span className="text-green-500 text-xs">+12% desde ontem</span>
           </div>
-          
+
           <div className="bg-[#0f1c2e] p-6 rounded-2xl border border-white/5 shadow-xl">
             <p className="text-gray-400 text-sm">Requisições API</p>
             <h3 className="text-2xl font-bold mt-1">45.2k</h3>

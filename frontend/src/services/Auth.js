@@ -11,7 +11,7 @@ export async function login(email, password) {
 
   try {
     data = await response.json()
-  } catch {}
+  } catch { }
 
   if (!response.ok) {
     throw new Error(data.message || "Erro no login")
@@ -21,7 +21,10 @@ export async function login(email, password) {
     throw new Error("Token não recebido")
   }
 
-  localStorage.setItem("token", data.token)
+  const dataUser = await response.json();
+
+  localStorage.setItem("token", data.token);
+  localStorage.setItem("user", JSON.stringify(dataUser.user));
 
   return {
     token: data.token,
