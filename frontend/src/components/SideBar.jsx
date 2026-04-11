@@ -48,8 +48,8 @@ export default function Sidebar() {
       rounded-2xl
       shadow-[0_0_30px_rgba(59,130,246,0.08)]
     `}>
-            <header>
-                <div className="relative mb-8 flex items-center justify-left h-10">
+            <header className="  border-b border-white/10">
+                <div className="relative mb-4  flex items-center justify-left h-10">
 
                     {/* LOGO GRANDE */}
                     <div
@@ -81,7 +81,7 @@ export default function Sidebar() {
 
 
             {/* MENU */}
-            <nav className="flex flex-col gap-2">
+            <nav className="flex mt-4 flex-col gap-2">
                 {menu.map((item) => {
                     const Icon = item.icon
                     const isActive = pathname === item.path

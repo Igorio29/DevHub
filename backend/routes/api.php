@@ -12,7 +12,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'show']);
     Route::put('/user', [AuthController::class, 'update']);
     Route::get('/projects', [ProjectController::class, 'index']);
+    Route::get('/projects/{id}', [ProjectController::class, 'getProjectById']);
     Route::get('/projects/{id}/commits', [ProjectController::class, 'getCommits']);
     Route::get('/projects/{id}/merge-requests', [ProjectController::class, 'getMergeRequests']);
     Route::get('/projects/{id}/branches', [ProjectController::class, 'getBranches']);
+    Route::get('/projects/{id}/members', [ProjectController::class, 'members']);
+    Route::get('/projects/{id}/files', [ProjectController::class, 'getFiles']);
+    Route::get('/projects/{id}/file', [ProjectController::class, 'getFileContent']);
 });

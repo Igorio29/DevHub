@@ -1,23 +1,26 @@
+import { motion, AnimatePresence } from "framer-motion"
 import { useEffect, useState } from "react"
 
 
 
 export default function Commits({ projectId }) {
+
+    const [open, setOpen] = useState(false)
     const [commits, setCommits] = useState([])
     const token = localStorage.getItem("token")
     const [branch, setBranch] = useState("main")
     const [branches, setBranches] = useState([])
 
     useEffect(() => {
-    fetch(`http://localhost:8000/api/projects/${projectId}/commits?branch=${branch}`, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: "application/json"
-        }
-    })
-        .then(res => res.json())
-        .then(setCommits)
-}, [projectId, branch])
+        fetch(`http://localhost:8000/api/projects/${projectId}/commits?branch=${branch}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: "application/json"
+            }
+        })
+            .then(res => res.json())
+            .then(setCommits)
+    }, [projectId, branch])
 
     useEffect(() => {
         // 🔥 COMMITS
@@ -46,30 +49,66 @@ export default function Commits({ projectId }) {
 
     return (
         <div className="space-y-3">
-            <select
-                value={branch}
-                onChange={(e) => setBranch(e.target.value)}
-                className="bg-white/10 border border-white/20 p-2 rounded"
-            >
-                {branches.map(b => (
-                    <option
-                    className="bg-[#0b1727]"
-                    key={b.name} value={b.name}>
-                        {b.name}
-                    </option>
-                ))}
-            </select>
-            {commits.map(commit => (
-                <div
-                    key={commit.id}
-                    className="bg-white/5 border border-white/10 p-3 rounded-lg"
+            <div className="relative w-fit">
+
+                {/* BOTÃO */}
+                <motion.button
+                    onClick={() => setOpen(!open)}
+                    whileTap={{ scale: 0.97 }}
+                    className="bg-white/5 border border-white/10 px-4 py-2 rounded-lg text-sm flex items-center gap-2 hover:bg-white/10 transition"
                 >
-                    <p className="text-sm">{commit.message}</p>
-                    <p className="text-xs text-white/50">
-                        {commit.author_name} • {new Date(commit.committed_date).toLocaleDateString()}
-                    </p>
-                </div>
-            ))}
+                    🌿 {branch}
+                </motion.button>
+
+                {/* DROPDOWN */}
+                <AnimatePresence>
+                    {open && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -5 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -5 }}
+                            transition={{ duration: 0.15 }}
+                            className="absolute mt-2 w-40 bg-[#0b1727] border border-white/10 rounded-lg shadow-lg z-50"
+                        >
+                            {branches.map(b => (
+                                <div
+                                    key={b.name}
+                                    onClick={() => {
+                                        setBranch(b.name)
+                                        setOpen(false)
+                                    }}
+                                    className="px-3 py-2 text-sm cursor-pointer hover:bg-white/10 transition flex items-center justify-between"
+                                >
+                                    {b.name}
+
+                                    {branch === b.name && (
+                                        <span className="text-blue-400">●</span>
+                                    )}
+                                </div>
+                            ))}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+            </div>
+            <AnimatePresence mode="popLayout">
+                {commits.map(commit => (
+                    <motion.div
+                        key={commit.id}
+                        layout
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.2 }}
+                        className="bg-white/5 border border-white/10 p-3 rounded-lg"
+                    >
+                        <p className="text-sm">{commit.message}</p>
+                        <p className="text-xs text-white/50">
+                            {commit.author_name} • {new Date(commit.committed_date).toLocaleDateString()}
+                        </p>
+                    </motion.div>
+                ))}
+            </AnimatePresence>
         </div>
     )
 }

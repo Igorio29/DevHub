@@ -9,6 +9,51 @@ use Illuminate\Support\Facades\Log;
 class ProjectController extends Controller
 {
 
+    public function getFileContent($id, Request $request)
+    {
+        $user = $request->user();
+
+        $path = $request->query('path');
+
+        $response = Http::withOptions([
+            'verify' => false
+        ])->withToken($user->gitlab_token)
+            ->get("https://gitlab.com/api/v4/projects/$id/repository/files/" . urlencode($path) . "/raw", [
+                'ref' => 'main'
+            ]);
+
+        return response($response->body());
+    }
+
+    public function getFiles($id, Request $request)
+    {
+        $user = $request->user();
+
+        $path = $request->query('path', '');
+
+        $response = Http::withOptions([
+            'verify' => false
+        ])->withToken($user->gitlab_token)
+            ->get("https://gitlab.com/api/v4/projects/$id/repository/tree", [
+                'path' => $path,
+                'per_page' => 100
+            ]);
+
+        return response()->json($response->json());
+    }
+
+    public function members($id, Request $request)
+    {
+        $user = $request->user();
+
+        $response = Http::withOptions([
+            'verify' => false
+        ])->withToken($user->gitlab_token)
+            ->get("https://gitlab.com/api/v4/projects/$id/members");
+
+        return response()->json($response->json());
+    }
+
     public function getMergeRequests($id, Request $request)
     {
         try {
@@ -95,6 +140,34 @@ class ProjectController extends Controller
             'verify' => false // 
         ])->withToken($user->gitlab_token)
             ->get('https://gitlab.com/api/v4/projects', $params);
+
+        return response()->json($response->json());
+    }
+
+
+
+    public function getProjectById($id, Request $request)
+    {
+        $user = $request->user();
+
+        if (!$user->gitlab_token) {
+            return response()->json([
+                'error' => 'Usuário não autenticado ou sem token'
+            ], 401);
+        }
+
+        $response = Http::withOptions([
+            'verify' => false // 
+        ])->withToken($user->gitlab_token)
+            ->get("https://gitlab.com/api/v4/projects/$id");
+
+        if (!$response->successful()) {
+            return response()->json([
+                'error' => 'Erro ao buscar projeto',
+                'status' => $response->status(),
+                'body' => $response->body()
+            ], 500);
+        }
 
         return response()->json($response->json());
     }

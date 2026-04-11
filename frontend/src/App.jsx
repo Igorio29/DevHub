@@ -11,6 +11,7 @@ import MergeRequest from "./pages/MergeRequests";
 import Enviroments from "./pages/Enviroments";
 import Profile from "./components/Profile";
 import ProjectDetails from "./pages/ProjectDetails";
+import FileViewer from "./pages/FileViewer";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           <Route path="/environments" element={<Enviroments />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/auth/gitlab/callback" element={<GitlabCallback />} />
+          <Route path="/project/:id/file" element={<FileViewer />} />
         </Route>
       </Routes>
       
