@@ -15,6 +15,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'avatar',
+        'custom_name',
+        'custom_avatar',
+        'gitlab_token',
         'gitlab_id',
         'avatar',
     ];

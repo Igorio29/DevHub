@@ -18,6 +18,9 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
             $table->string('avatar')->nullable();
+            $table->boolean('custom_name')->default(false);
+            $table->boolean('custom_avatar')->default(false);
+            $table->text('gitlab_token')->nullable();
             $table->string('gitlab_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
