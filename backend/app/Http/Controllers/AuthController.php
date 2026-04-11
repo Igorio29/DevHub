@@ -111,7 +111,9 @@ class AuthController extends Controller
 
             $token = $user->createToken('auth_token')->plainTextToken;
 
-            return redirect("http://localhost:5173/auth/gitlab/callback?token=$token&user=" . urlencode(json_encode($user)));
+            $frontend_url = env('FRONTEND_URL');
+
+            return redirect("$frontend_url/auth/gitlab/callback?token=$token&user=" . urlencode(json_encode($user)));
         } catch (\Exception $e) {
             return response()->json([
                 'error' => $e->getMessage()
