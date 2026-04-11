@@ -15,6 +15,4 @@ RUN composer install --no-dev --optimize-autoloader
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
-CMD ["/start.sh"]
-
-CMD php artisan serve --host=0.0.0.0 --port=8000
+CMD ["sh", "/start.sh"]
