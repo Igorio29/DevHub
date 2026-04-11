@@ -16,7 +16,7 @@ export default function ProjectDetails() {
 
     useEffect(() => {
         async function fetchData() {
-            const projectRes = await fetch(`http://localhost:8000/api/projects/${id}`, {
+            const projectRes = await fetch(`${import.meta.env.VITE_API_URL}/api/projects/${id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     Accept: "application/json"
@@ -25,7 +25,7 @@ export default function ProjectDetails() {
             const projectData = await projectRes.json()
             console.log(projectData)
 
-            const membersRes = await fetch(`http://localhost:8000/api/projects/${id}/members`, {
+            const membersRes = await fetch(`${import.meta.env.VITE_API_URL}/api/projects/${id}/members`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     Accept: "application/json"
@@ -38,7 +38,7 @@ export default function ProjectDetails() {
 
 
             const membersData = await membersRes.json()
-            const commitsRes = await fetch(`http://localhost:8000/api/projects/${id}/commits`, {
+            const commitsRes = await fetch(`${import.meta.env.VITE_API_URL}/api/projects/${id}/commits`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     Accept: "application/json"

@@ -15,7 +15,7 @@ export default function FileViewer() {
     useEffect(() => {
         async function fetchFile() {
             const res = await fetch(
-                `http://localhost:8000/api/projects/${id}/file?path=${path}`, {
+                `${import.meta.env.VITE_API_URL}/api/projects/${id}/file?path=${path}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     Accept: "application/json"

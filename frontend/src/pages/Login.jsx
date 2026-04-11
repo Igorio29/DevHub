@@ -80,7 +80,7 @@ function Login() {
                         <div className="space-y-4">
 
                             <a
-                                href="http://localhost:8000/api/auth/gitlab/redirect"
+                                href={`${import.meta.env.VITE_API_URL}/api/auth/gitlab/redirect`}
                                 className="w-full flex items-center justify-center gap-3 mt-4 py-3 rounded-lg 
   bg-[#0f1c2e] hover:bg-[#e85c1c] transition-all 
   border border-[#e85c1c]

@@ -12,7 +12,7 @@ export default function Commits({ projectId }) {
     const [branches, setBranches] = useState([])
 
     useEffect(() => {
-        fetch(`http://localhost:8000/api/projects/${projectId}/commits?branch=${branch}`, {
+        fetch(`${import.meta.env.VITE_API_URL}/api/projects/${projectId}/commits?branch=${branch}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 Accept: "application/json"
@@ -24,7 +24,7 @@ export default function Commits({ projectId }) {
 
     useEffect(() => {
         // 🔥 COMMITS
-        fetch(`http://localhost:8000/api/projects/${projectId}/commits?branch=${branch}`, {
+        fetch(`${import.meta.env.VITE_API_URL}/api/projects/${projectId}/commits?branch=${branch}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 Accept: "application/json"
@@ -35,7 +35,7 @@ export default function Commits({ projectId }) {
             .catch(console.error)
 
         // 🔥 BRANCHES
-        fetch(`http://localhost:8000/api/projects/${projectId}/branches`, {
+        fetch(`${import.meta.env.VITE_API_URL}/api/projects/${projectId}/branches`, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 Accept: "application/json"

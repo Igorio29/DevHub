@@ -12,7 +12,7 @@ export default function FileExplorer({ projectId }) {
 
     async function fetchFiles(currentPath = "") {
         const res = await fetch(
-            `http://localhost:8000/api/projects/${projectId}/files?path=${currentPath}`, {
+            `${import.meta.env.VITE_API_URL}/api/projects/${projectId}/files?path=${currentPath}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 Accept: "application/json"

@@ -11,7 +11,7 @@ export default function MergeRequests({ projectId }) {
         setLoading(true)
         setError(null)
 
-        fetch(`http://localhost:8000/api/projects/${projectId}/merge-requests`, {
+        fetch(`${import.meta.env.VITE_API_URL}/api/projects/${projectId}/merge-requests`, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 Accept: "application/json"
