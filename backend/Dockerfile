@@ -15,4 +15,4 @@ RUN composer install --no-dev --optimize-autoloader
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
-CMD ["sh", "/start.sh"]
+ENTRYPOINT ["sh", "/start.sh"]
