@@ -23,7 +23,9 @@ function App() {
       </>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route element={<MainLayout/ >}>
+        <Route path="/auth/gitlab/callback" element={<GitlabCallback />} />
+
+        <Route element={<MainLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/projects" element={<Project />} />
           <Route path="/project/:id" element={<ProjectDetails />} />
@@ -31,11 +33,10 @@ function App() {
           <Route path="/merge-requests" element={<MergeRequest />} />
           <Route path="/environments" element={<Enviroments />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/auth/gitlab/callback" element={<GitlabCallback />} />
           <Route path="/project/:id/file" element={<FileViewer />} />
         </Route>
       </Routes>
-      
+
     </>
   );
 }
