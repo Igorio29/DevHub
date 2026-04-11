@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import Dashboard from "./pages/Dashboard";
-import Login from "./pages/login";
+import Login from "./pages/Login";
 import { Helmet } from "react-helmet";
 import GitlabCallback from "./pages/GitlabCallBack";
 import MainLayout from "./pages/layouts/MainLayout";
