@@ -12,13 +12,13 @@ import {
 
 import LogoDevHub, { LogoSimples } from "./LogoDevHub"
 
-export default function Sidebar() {
+export default function Sidebar({sidebarOpen ,setSidebarOpen}) {
     const { pathname } = useLocation()
     const [collapsed, setCollapsed] = useState(() => {
         const saved = localStorage.getItem("sidebar")
         return saved === "true"
     })
-    const [sidebarOpen, setSidebarOpen] = useState(false)
+
 
     useEffect(() => {
         localStorage.setItem("sidebar", collapsed)
@@ -32,26 +32,25 @@ export default function Sidebar() {
         { name: "Ambientes", path: "/environments", icon: Server },
     ]
 
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth < 768) {
+                setCollapsed(false)
+            }
+        }
+
+        handleResize()
+        window.addEventListener("resize", handleResize)
+
+        return () => window.removeEventListener("resize", handleResize)
+    }, [])
+
     return (
         <>
-            {sidebarOpen ? <button
-                className="md:hidden mb-4 text-white fixed top-4 left-4 z-50"
-                onClick={() => setSidebarOpen(false)}
-            >
-                ✕
-            </button>
-                :
-                <button
-                    className="md:hidden bg-[#191970] py-3 px-4 rounded-full mb-4 text-white fixed top-0 left-0 z-50"
-                    onClick={() => setSidebarOpen(true)}
-                >
-                    ☰
-                </button>
-            }
             {/* OVERLAY */}
             {sidebarOpen && (
                 <div
-                    className="fixed inset-0 bg-black/50 z-40"
+                    className="fixed inset-0 bg-black/50 z-40 md:hidden"
                     onClick={() => setSidebarOpen(false)}
                 />
             )}
@@ -123,7 +122,7 @@ export default function Sidebar() {
                             <Link
                                 key={item.path}
                                 to={item.path}
-                                onClick={()=> setSidebarOpen(false)}
+                                onClick={() => setSidebarOpen(false)}
                                 className={`
                 flex items-center px-3 py-2 rounded-xl
                 transition-all duration-300 group

@@ -2,13 +2,13 @@ import { Link, useLocation, useNavigate } from "react-router-dom"
 import { useState, useRef, useEffect } from "react";
 import { useUser } from "../context/UserContext";
 
-export default function Navbar({ className }) {
+export default function Navbar({ className, setSidebarOpen }) {
     const { pathname } = useLocation()
     const navigate = useNavigate();
     const [open, setOpen] = useState(false)
     const menuRef = useRef()
-    const { user, setUser, fetchUser} = useUser()
-    
+    const { user, setUser, fetchUser } = useUser()
+
 
     useEffect(() => {
         function handleClickOutside(e) {
@@ -40,6 +40,7 @@ export default function Navbar({ className }) {
 
     return (
         <header className={`
+            relative z-50
       h-16
       flex items-center justify-between
       px-6
@@ -52,6 +53,29 @@ export default function Navbar({ className }) {
       relative
       ${className}
     `}>
+
+            <button
+                onClick={() => setSidebarOpen(true)}
+                className="
+    md:hidden
+    flex items-center justify-center
+
+    w-11 h-11
+    rounded-xl
+
+    bg-gradient-to-br from-blue-500 to-blue-700
+    text-white
+
+    shadow-lg shadow-blue-900/30
+
+    hover:scale-105 hover:shadow-blue-500/40
+    active:scale-95
+
+    transition-all duration-200
+  "
+            >
+                ☰
+            </button>
 
             {/* TÍTULO */}
             <h1 className="text-white text-lg font-semibold tracking-wide">
@@ -74,7 +98,7 @@ export default function Navbar({ className }) {
 
                         <div
                             onClick={() => setOpen(!open)}
-                            className={`cursor-pointer ${open? "bg-[#0a0f1c]" : "bg-[#0b1727]"} py-2 px-3 rounded-full flex items-center gap-2`}
+                            className={`cursor-pointer ${open ? "bg-[#0a0f1c]" : "bg-[#0b1727]"} py-2 px-3 rounded-full flex items-center gap-2`}
                         >
                             <h1 className="text-white">{user?.name}</h1>
                             {user?.avatar ? (
