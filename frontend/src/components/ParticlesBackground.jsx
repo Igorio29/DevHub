@@ -25,7 +25,7 @@ function ParticlesBackground() {
           color: "#0b1727",
         },
         particles: {
-          number: { value: 90 },
+          number: { value: 80 },
           color: { value: "#3b82f6" },
           links: {
             enable: true,

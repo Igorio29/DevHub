@@ -7,7 +7,8 @@ export default function Navbar({ className }) {
     const navigate = useNavigate();
     const [open, setOpen] = useState(false)
     const menuRef = useRef()
-     const { user, setUser, fetchUser} = useUser()
+    const { user, setUser, fetchUser} = useUser()
+    
 
     useEffect(() => {
         function handleClickOutside(e) {

@@ -18,6 +18,7 @@ export default function Sidebar() {
         const saved = localStorage.getItem("sidebar")
         return saved === "true"
     })
+    const [sidebarOpen, setSidebarOpen] = useState(false)
 
     useEffect(() => {
         localStorage.setItem("sidebar", collapsed)
@@ -32,14 +33,46 @@ export default function Sidebar() {
     ]
 
     return (
-        <aside className={`
-      relative
-      flex
-      h-[calc(100vh-2rem)]
-      m-4
-      p-4
-      flex flex-col
-      transition-all duration-300 ease-in-out
+        <>
+            {sidebarOpen ? <button
+                className="md:hidden mb-4 text-white fixed top-4 left-4 z-50"
+                onClick={() => setSidebarOpen(false)}
+            >
+                ✕
+            </button>
+                :
+                <button
+                    className="md:hidden bg-[#191970] py-3 px-4 rounded-full mb-4 text-white fixed top-0 left-0 z-50"
+                    onClick={() => setSidebarOpen(true)}
+                >
+                    ☰
+                </button>
+            }
+            {/* OVERLAY */}
+            {sidebarOpen && (
+                <div
+                    className="fixed inset-0 bg-black/50 z-40"
+                    onClick={() => setSidebarOpen(false)}
+                />
+            )}
+
+            {/* SIDEBAR */}
+
+            <aside className={`
+        fixed md:relative
+  top-0 left-0
+        flex
+        h-[calc(100vh-2rem)]
+        z-50
+        flex flex-col
+        transition-all duration-300 ease-in-out
+
+
+        ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+        md:translate-x-0
+
+        m-0 md:m-4
+        p-4
 
       ${collapsed ? "w-20" : "w-64"}
 
@@ -48,108 +81,110 @@ export default function Sidebar() {
       rounded-2xl
       shadow-[0_0_30px_rgba(59,130,246,0.08)]
     `}>
-            <header className="  border-b border-white/10">
-                <div className="relative mb-4  flex items-center justify-left h-10">
+                <header className="  border-b border-white/10">
+                    <div className="relative mb-4  flex items-center justify-left h-10">
 
-                    {/* LOGO GRANDE */}
-                    <div
-                        className={`
-      absolute transition-all duration-300
-      ${collapsed
-                                ? "opacity-0 scale-90 translate-x-2"
-                                : "opacity-100 scale-100 translate-x-0"}
-    `}
-                    >
-                        <LogoDevHub />
-                    </div>
-
-                    {/* LOGO PEQUENA */}
-                    <div
-                        className={`
-      absolute transition-all duration-300
-      ${collapsed
-                                ? "opacity-100 scale-100 translate-x-0"
-                                : "opacity-0 scale-90 -translate-x-2"}
-    `}
-                    >
-                        <LogoSimples />
-                    </div>
-
-                </div>
-
-            </header>
-
-
-            {/* MENU */}
-            <nav className="flex mt-4 flex-col gap-2">
-                {menu.map((item) => {
-                    const Icon = item.icon
-                    const isActive = pathname === item.path
-
-                    return (
-                        <Link
-                            key={item.path}
-                            to={item.path}
+                        {/* LOGO GRANDE */}
+                        <div
                             className={`
+      absolute transition-all duration-300
+      ${collapsed
+                                    ? "opacity-0 scale-90 translate-x-2"
+                                    : "opacity-100 scale-100 translate-x-0"}
+    `}
+                        >
+                            <LogoDevHub />
+                        </div>
+
+                        {/* LOGO PEQUENA */}
+                        <div
+                            className={`
+      absolute transition-all duration-300
+      ${collapsed
+                                    ? "opacity-100 scale-100 translate-x-0"
+                                    : "opacity-0 scale-90 -translate-x-2"}
+    `}
+                        >
+                            <LogoSimples />
+                        </div>
+
+                    </div>
+
+                </header>
+
+
+                {/* MENU */}
+                <nav className="flex mt-4 flex-col gap-2">
+                    {menu.map((item) => {
+                        const Icon = item.icon
+                        const isActive = pathname === item.path
+
+                        return (
+                            <Link
+                                key={item.path}
+                                to={item.path}
+                                onClick={()=> setSidebarOpen(false)}
+                                className={`
                 flex items-center px-3 py-2 rounded-xl
                 transition-all duration-300 group
 
                 ${collapsed ? "" : "gap-3"}
 
                 ${isActive
-                                    ? " bg-blue-600/20 text-white shadow-lg border border-blue-500/20"
-                                    : "text-zinc-400 hover:text-white hover:bg-white/5"
-                                }
+                                        ? " bg-blue-600/20 text-white shadow-lg border border-blue-500/20"
+                                        : "text-zinc-400 hover:text-white hover:bg-white/5"
+                                    }
               `}
-                        >
-                            <Icon
-                                size={20}
-                                className={`
+                            >
+                                <Icon
+                                    size={20}
+                                    className={`
                   transition-all
                   ${isActive
-                                        ? "text-blue-400 drop-shadow-[0_0_6px_#3b82f6]"
-                                        : "group-hover:text-white"
-                                    }
+                                            ? "text-blue-400 drop-shadow-[0_0_6px_#3b82f6]"
+                                            : "group-hover:text-white"
+                                        }
                 `}
-                            />
+                                />
 
-                            <span
-                                className={`
+                                <span
+                                    className={`
                                     text-sm font-medium whitespace-nowrap
                                     transition-all duration-300 ease-in-out
                                     ${collapsed
-                                        ? "opacity-0 -translate-x-2 max-w-0 overflow-hidden"
-                                        : "opacity-100 translate-x-0 max-w-[200px]"}
+                                            ? "opacity-0 -translate-x-2 max-w-0 overflow-hidden"
+                                            : "opacity-100 translate-x-0 max-w-[200px]"}
                                 `}
-                            >
-                                {item.name}
-                            </span>
-                        </Link>
-                    )
-                })}
-            </nav>
-            {/* BOTÃO RETRÁTIL */}
+                                >
+                                    {item.name}
+                                </span>
+                            </Link>
+                        )
+                    })}
+                </nav>
+                {/* BOTÃO RETRÁTIL */}
                 <div className={`flex  
             ${collapsed ?
                         "justify-center" : "justify-end"} mb-10`}>
                     <button
                         onClick={() => setCollapsed(!collapsed)}
                         className={`
-  absolute -right-3 top-[48%]
-        flex items-center justify-center
-        w-8 h-8
-        rounded-full
+                            hidden md:flex
+                        absolute -right-3 top-[48%]
+                                flex items-center justify-center
+                                w-8 h-8
+                                rounded-full
 
-        bg-white/10 backdrop-blur-md
-        border border-white/10
+                                bg-white/10 backdrop-blur-md
+                                border border-white/10
 
-        hover:bg-white/20
-        hover:scale-110
+                                hover:bg-white/20
+                                hover:scale-110
 
-        transition-all duration-300
-        shadow-md
-  ${collapsed ? "justify-center" : ""}
-`}
+                                transition-all duration-300
+                                shadow-md
+                        ${collapsed ? "justify-center" : ""}
+                        `}
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -173,14 +208,16 @@ export default function Sidebar() {
                     </button>
                 </div>
 
-            {/* FOOTER */}
-            {
-                !collapsed && (
-                    <div className="mt-auto pt-6 border-t border-white/10 text-xs text-zinc-500 text-center">
-                        © Direitos Reservados Z-Tech 
-                    </div>
-                )
-            }
-        </aside >
+                {/* FOOTER */}
+                {
+                    !collapsed && (
+                        <div className="mt-auto pt-6 border-t border-white/10 text-xs text-zinc-500 text-center">
+                            © Direitos Reservados Z-Tech
+                        </div>
+                    )
+                }
+            </aside >
+
+        </>
     )
 }
