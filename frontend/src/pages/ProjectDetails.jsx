@@ -54,7 +54,7 @@ export default function ProjectDetails() {
         fetchData()
     }, [id])
 
-    if (!project) return <p>Carregando...</p>
+    if (!project) return <p className="p-6 text-gray-500 animate-pulse">Carregando...</p>
 
     const cleanMembers = Array.isArray(members)
         ? members.filter(m =>

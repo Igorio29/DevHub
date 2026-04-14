@@ -8,6 +8,48 @@ use Illuminate\Support\Facades\Log;
 
 class ProjectController extends Controller
 {
+    public function getLastCommitAllProject(Request $request)
+    {
+        $user = $request->user();
+
+        $params = [];
+
+        if ($request->type === 'owned') {
+            $params = ['owned' => true];
+        } elseif ($request->type === 'membership') {
+            $params = ['membership' => true];
+        } else {
+            $params = [];
+        }
+
+        $projects = Http::withOptions([
+            'verify' => false // 
+        ])->withToken($user->gitlab_token)
+            ->get('https://gitlab.com/api/v4/projects', $params)->json();
+
+        $result = [];
+
+        foreach($projects as $project){
+            $commits = Http::withOptions([
+                'verify' => false
+            ])->withToken($user->gitlab_token)
+            ->get("https://gitlab.com/api/v4/projects/{$project['id']}/repository/commits", [
+                'per_page'=> 1
+            ])->json();
+
+            $lastCommit = $commits[0] ?? null;
+            
+            $result[] = [
+                'project_id' => $project['id'],
+                'project_name' => $project['name'],
+                'last_commit' => $lastCommit
+            ];
+
+        }
+
+        return response()->json($result);
+
+    }
 
     public function getFileContent($id, Request $request)
     {
@@ -111,7 +153,8 @@ class ProjectController extends Controller
                     'verify' => false,
                 ])
                 ->get("https://gitlab.com/api/v4/projects/$id/repository/commits", [
-                    'ref_name' => $branch
+                    'ref_name' => $branch,
+                    'per_page' => 100
                 ]);
 
             return response()->json($response->json());

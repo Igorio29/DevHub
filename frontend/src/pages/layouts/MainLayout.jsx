@@ -2,7 +2,6 @@ import { Outlet } from "react-router-dom";
 import Sidebar from "../../components/SideBar";
 import Navbar from "../../components/NavBar";
 import { ToastContainer } from "react-toastify";
-import ParticlesBackground from "../../components/ParticlesBackground";
 import { useState } from "react";
 
 

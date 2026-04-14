@@ -19,4 +19,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/projects/{id}/members', [ProjectController::class, 'members']);
     Route::get('/projects/{id}/files', [ProjectController::class, 'getFiles']);
     Route::get('/projects/{id}/file', [ProjectController::class, 'getFileContent']);
+    Route::get('/last-commits', [ProjectController::class, 'getLastCommitAllProject']);
 });
