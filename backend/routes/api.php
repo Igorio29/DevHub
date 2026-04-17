@@ -20,4 +20,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/projects/{id}/files', [ProjectController::class, 'getFiles']);
     Route::get('/projects/{id}/file', [ProjectController::class, 'getFileContent']);
     Route::get('/last-commits', [ProjectController::class, 'getLastCommitAllProject']);
+    Route::get('/projects/{id}/commits/{sha}/diff', [ProjectController::class, 'getCommitDiff']);
+    Route::get('/projects/{id}/commits/{sha}', [ProjectController::class, 'getCommit']);
 });

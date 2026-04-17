@@ -12,6 +12,7 @@ import Enviroments from "./pages/Enviroments";
 import Profile from "./components/Profile";
 import ProjectDetails from "./pages/ProjectDetails";
 import FileViewer from "./pages/FileViewer";
+import CommitDetails from "./pages/CommitDetails";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
           <Route path="/environments" element={<Enviroments />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/project/:id/file" element={<FileViewer />} />
+          <Route path="/projects/:projectId/commits/:sha" element={<CommitDetails />} />
         </Route>
       </Routes>
 

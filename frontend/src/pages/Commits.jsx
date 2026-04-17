@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { GitCommit, User, Calendar } from "lucide-react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+
 
 export default function Commits() {
     const [projects, setProjects] = useState([]);
@@ -18,6 +20,9 @@ export default function Commits() {
 
     const [commits, setCommits] = useState([]);
     const [loadingCommits, setLoadingCommits] = useState(false);
+
+
+    const navigate = useNavigate();
 
 
     const openProject = async (project) => {
@@ -153,13 +158,13 @@ export default function Commits() {
                             {project.last_commit ? (
                                 <>
                                     <p className="flex  text-sm text-white/80 mb-2 line-clamp-2">
-                                        <GitCommit size={16}/>
+                                        <GitCommit size={16} />
                                         {project.last_commit.message}
                                     </p>
 
                                     <div className="text-xs text-white/50">
-                                        <p className="flex"><User size={18}/> {project.last_commit.author_name}</p>
-                                        <p className="flex"><Calendar size={18}/> {new Date(project.last_commit.created_at).toLocaleString()}</p>
+                                        <p className="flex"><User size={18} /> {project.last_commit.author_name}</p>
+                                        <p className="flex"><Calendar size={18} /> {new Date(project.last_commit.created_at).toLocaleString()}</p>
                                     </div>
                                 </>
                             ) : (
@@ -199,6 +204,7 @@ export default function Commits() {
                                 onChange={(e) => setSelectedBranch(e.target.value)}
                                 className="
                                     bg-[#020617]
+                                    cursor-pointer
                                     border border-white/10
                                     rounded-lg
                                     px-3 py-2
@@ -207,6 +213,7 @@ export default function Commits() {
                                     focus:border-blue-500
                                     transition
                                     w-full
+                                    hover:bg-[#0f172a]
                                 "
                             >
                                 {branches.map((branch) => (
@@ -227,8 +234,9 @@ export default function Commits() {
                             {!loadingCommits &&
                                 commits.map((commit) => (
                                     <div
+                                        onClick={() => navigate(`/projects/${selectedProject.project_id}/commits/${commit.id}`)}
                                         key={commit.id}
-                                        className="bg-white/5 p-3 rounded-lg border border-white/10"
+                                        className="bg-white/5 p-3 hover:bg-[#0f172a] cursor-pointer rounded-lg border border-white/10"
                                     >
                                         <p className="text-sm font-medium">
                                             {commit.message}

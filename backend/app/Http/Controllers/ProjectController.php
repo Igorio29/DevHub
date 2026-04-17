@@ -8,6 +8,51 @@ use Illuminate\Support\Facades\Log;
 
 class ProjectController extends Controller
 {
+
+    public function getCommitDiff($projectId, $sha, Request $request)
+    {
+        try {
+            $user = $request->user();
+
+            $response = Http::withToken($user->gitlab_token)
+                ->withOptions([
+                    'verify' => false
+                ])
+                ->get("https://gitlab.com/api/v4/projects/{$projectId}/repository/commits/{$sha}/diff");
+
+            return response()->json($response->json());
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao buscar diff do commit',
+                'details' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getCommit($projectId, $sha, Request $request)
+    {
+        try {
+            $user = $request->user();
+
+            if (!$user) {
+                return response()->json(['error' => 'Usuário não autenticado'], 401);
+            }
+
+            $response = Http::withToken($user->gitlab_token)
+                ->withOptions([
+                    'verify' => false
+                ])
+                ->get("https://gitlab.com/api/v4/projects/{$projectId}/repository/commits/{$sha}");
+
+            return response()->json($response->json());
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao buscar commit',
+                'details' => $e->getMessage()
+            ], 500);
+        }
+    }   
+
     public function getLastCommitAllProject(Request $request)
     {
         $user = $request->user();
@@ -29,26 +74,24 @@ class ProjectController extends Controller
 
         $result = [];
 
-        foreach($projects as $project){
+        foreach ($projects as $project) {
             $commits = Http::withOptions([
                 'verify' => false
             ])->withToken($user->gitlab_token)
-            ->get("https://gitlab.com/api/v4/projects/{$project['id']}/repository/commits", [
-                'per_page'=> 1
-            ])->json();
+                ->get("https://gitlab.com/api/v4/projects/{$project['id']}/repository/commits", [
+                    'per_page' => 1
+                ])->json();
 
             $lastCommit = $commits[0] ?? null;
-            
+
             $result[] = [
                 'project_id' => $project['id'],
                 'project_name' => $project['name'],
                 'last_commit' => $lastCommit
             ];
-
         }
 
         return response()->json($result);
-
     }
 
     public function getFileContent($id, Request $request)
