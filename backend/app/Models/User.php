@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use Laravel\Sanctum\HasApiTokens; // 👈 IMPORTANTE
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable; // 👈 AQUI TAMBÉM
+    use HasApiTokens, HasFactory, Notifiable;
 
     protected $fillable = [
         'name',
@@ -20,6 +20,11 @@ class User extends Authenticatable
         'custom_avatar',
         'gitlab_token',
         'gitlab_id',
-        'avatar',
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+        'gitlab_token',
     ];
 }

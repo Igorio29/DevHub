@@ -59,7 +59,7 @@ export default function CommitDetails() {
 
     return (
         <div className="mx-auto w-full max-w-full space-y-6">
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 shadow-[0_0_30px_rgba(59,130,246,0.04)]">
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 shadow-[0_0_30px_rgba(59,130,246,0.04)] sm:p-5">
                 <h1 className="text-lg font-bold text-white">
                     {commit?.message}
                 </h1>
@@ -99,12 +99,12 @@ export default function CommitDetails() {
                     key={index}
                     className="max-w-full overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] shadow-[0_0_24px_rgba(15,23,42,0.24)]"
                 >
-                    <div className="flex items-center justify-between gap-4 border-b border-white/10 bg-white/5 px-4 py-3 text-sm font-medium">
+                    <div className="flex items-center justify-between gap-3 border-b border-white/10 bg-white/5 px-3 py-3 text-sm font-medium sm:px-4">
                         <span className="min-w-0 truncate text-white/90">
                             {file.new_path}
                         </span>
 
-                        <span className="shrink-0 text-xs text-white/40">
+                        <span className="hidden shrink-0 text-xs text-white/40 sm:block">
                             +{file.diff.match(/\+/g)?.length || 0} / -{file.diff.match(/\-/g)?.length || 0}
                         </span>
                     </div>

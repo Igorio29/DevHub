@@ -107,11 +107,11 @@ input:-webkit-autofill:focus {
 
 @layer components {
   .page-shell {
-    @apply p-6 text-white;
+    @apply p-4 text-white sm:p-6;
   }
 
   .page-header {
-    @apply flex flex-col gap-2 rounded-3xl border p-6;
+    @apply flex flex-col gap-2 rounded-3xl border p-4 sm:p-6;
     background:
       linear-gradient(135deg, rgba(8, 17, 34, 0.9), rgba(14, 25, 49, 0.78)),
       radial-gradient(circle at top right, rgba(90, 178, 255, 0.14), transparent 35%);
@@ -127,7 +127,7 @@ input:-webkit-autofill:focus {
   }
 
   .page-title {
-    @apply text-3xl font-bold tracking-tight;
+    @apply text-2xl font-bold tracking-tight sm:text-3xl;
   }
 
   .page-subtitle {

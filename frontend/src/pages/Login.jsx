@@ -58,7 +58,7 @@ function Login() {
                     <title>Login - DevHub</title>
                 </Helmet>
             </>
-            <div className="relative h-screen w-full bg-[#050a14] overflow-hidden">
+            <div className="relative min-h-dvh w-full bg-[#050a14] overflow-hidden">
 
                 {/* CAMADA 0: Partículas 
         pointer-events-none é CRUCIAL para que o clique passe pelas partículas e chegue no botão
@@ -68,23 +68,23 @@ function Login() {
                 </div>
 
                 {/* CAMADA 1: Formulário (Centralizado) */}
-                <div className="relative z-10 flex items-center justify-center h-full">
+                <div className="relative z-10 flex min-h-dvh items-center justify-center px-4 py-8 sm:py-10">
                     <form
                         onSubmit={handleLogin}
-                        className="bg-[#0f1c2e]/80 backdrop-blur-md p-9 rounded-2xl w-[350px] shadow-2xl border border-white/5 mx-4"
+                        className="mx-auto w-full max-w-[420px] rounded-2xl border border-white/5 bg-[#0f1c2e]/80 p-5 shadow-2xl backdrop-blur-md sm:p-9"
                     >
-                        <div className="flex justify-center mb-8">
-                            <LogoDevHub className="scale-125" />
+                        <div className="mb-6 flex justify-center sm:mb-8">
+                            <LogoDevHub className="scale-110 sm:scale-125" />
                         </div>
 
                         <div className="space-y-4">
 
                             <a
                                 href={`${import.meta.env.VITE_API_URL}/api/auth/gitlab/redirect`}
-                                className="w-full flex items-center justify-center gap-3 mt-4 py-3 rounded-lg 
+                                className="mt-2 flex w-full items-center justify-center gap-3 rounded-lg py-3 text-sm 
   bg-[#0f1c2e] hover:bg-[#e85c1c] transition-all 
   border border-[#e85c1c]
-  text-white font-semibold shadow-lg
+  text-white font-semibold shadow-lg sm:mt-4 sm:text-base
   cursor-pointer"
                             >
                                 <img
@@ -96,9 +96,9 @@ function Login() {
                                 Entrar com GitLab
                             </a>
                             <a
-                                className="w-full flex items-center justify-center gap-3 mt-3 py-3 rounded-lg 
+                                className="mt-3 flex w-full items-center justify-center gap-3 rounded-lg py-3 text-sm 
   bg-[#0f1c2e] border border-gray-600
-  text-gray-400 font-semibold shadow-lg
+  text-gray-400 font-semibold shadow-lg sm:text-base
   cursor-not-allowed opacity-70"
                             >
                                 <img

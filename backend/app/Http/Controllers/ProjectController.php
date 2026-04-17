@@ -5,26 +5,61 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Config;
 
 class ProjectController extends Controller
 {
+    private function getGitlabToken(Request $request): ?string
+    {
+        return $request->user()?->gitlab_token;
+    }
+
+    private function gitlabClient(string $token)
+    {
+        $sslVerify = Config::get('services.gitlab.ssl_verify', true);
+
+        return Http::withToken($token)
+            ->acceptJson()
+            ->timeout(15)
+            ->withOptions([
+                'verify' => $sslVerify,
+            ]);
+    }
+
+    private function unauthorizedResponse()
+    {
+        return response()->json([
+            'error' => 'Usuário não autenticado'
+        ], 401);
+    }
+
+    private function gitlabJsonResponse($response, string $message)
+    {
+        if (!$response->successful()) {
+            return response()->json([
+                'error' => $message
+            ], $response->status());
+        }
+
+        return response()->json($response->json());
+    }
 
     public function getCommitDiff($projectId, $sha, Request $request)
     {
         try {
-            $user = $request->user();
+            $token = $this->getGitlabToken($request);
 
-            $response = Http::withToken($user->gitlab_token)
-                ->withOptions([
-                    'verify' => false
-                ])
+            if (!$token) {
+                return $this->unauthorizedResponse();
+            }
+
+            $response = $this->gitlabClient($token)
                 ->get("https://gitlab.com/api/v4/projects/{$projectId}/repository/commits/{$sha}/diff");
 
-            return response()->json($response->json());
+            return $this->gitlabJsonResponse($response, 'Erro ao buscar diff do commit');
         } catch (\Exception $e) {
             return response()->json([
-                'error' => 'Erro ao buscar diff do commit',
-                'details' => $e->getMessage()
+                'error' => 'Erro ao buscar diff do commit'
             ], 500);
         }
     }
@@ -32,30 +67,30 @@ class ProjectController extends Controller
     public function getCommit($projectId, $sha, Request $request)
     {
         try {
-            $user = $request->user();
+            $token = $this->getGitlabToken($request);
 
-            if (!$user) {
-                return response()->json(['error' => 'Usuário não autenticado'], 401);
+            if (!$token) {
+                return $this->unauthorizedResponse();
             }
 
-            $response = Http::withToken($user->gitlab_token)
-                ->withOptions([
-                    'verify' => false
-                ])
+            $response = $this->gitlabClient($token)
                 ->get("https://gitlab.com/api/v4/projects/{$projectId}/repository/commits/{$sha}");
 
-            return response()->json($response->json());
+            return $this->gitlabJsonResponse($response, 'Erro ao buscar commit');
         } catch (\Exception $e) {
             return response()->json([
-                'error' => 'Erro ao buscar commit',
-                'details' => $e->getMessage()
+                'error' => 'Erro ao buscar commit'
             ], 500);
         }
-    }   
+    }
 
     public function getLastCommitAllProject(Request $request)
     {
-        $user = $request->user();
+        $token = $this->getGitlabToken($request);
+
+        if (!$token) {
+            return $this->unauthorizedResponse();
+        }
 
         $params = [];
 
@@ -63,25 +98,27 @@ class ProjectController extends Controller
             $params = ['owned' => true];
         } elseif ($request->type === 'membership') {
             $params = ['membership' => true];
-        } else {
-            $params = [];
         }
 
-        $projects = Http::withOptions([
-            'verify' => false // 
-        ])->withToken($user->gitlab_token)
-            ->get('https://gitlab.com/api/v4/projects', $params)->json();
+        $projectsResponse = $this->gitlabClient($token)
+            ->get('https://gitlab.com/api/v4/projects', $params);
 
+        if (!$projectsResponse->successful()) {
+            return response()->json([
+                'error' => 'Erro ao buscar projetos'
+            ], $projectsResponse->status());
+        }
+
+        $projects = $projectsResponse->json();
         $result = [];
 
         foreach ($projects as $project) {
-            $commits = Http::withOptions([
-                'verify' => false
-            ])->withToken($user->gitlab_token)
+            $commitsResponse = $this->gitlabClient($token)
                 ->get("https://gitlab.com/api/v4/projects/{$project['id']}/repository/commits", [
                     'per_page' => 1
-                ])->json();
+                ]);
 
+            $commits = $commitsResponse->successful() ? $commitsResponse->json() : [];
             $lastCommit = $commits[0] ?? null;
 
             $result[] = [
@@ -96,120 +133,147 @@ class ProjectController extends Controller
 
     public function getFileContent($id, Request $request)
     {
-        $user = $request->user();
+        $token = $this->getGitlabToken($request);
+
+        if (!$token) {
+            return $this->unauthorizedResponse();
+        }
 
         $path = $request->query('path');
 
-        $response = Http::withOptions([
-            'verify' => false
-        ])->withToken($user->gitlab_token)
+        if (!is_string($path) || $path === '') {
+            return response()->json([
+                'error' => 'Caminho do arquivo inválido'
+            ], 422);
+        }
+
+        $response = $this->gitlabClient($token)
             ->get("https://gitlab.com/api/v4/projects/$id/repository/files/" . urlencode($path) . "/raw", [
                 'ref' => 'main'
             ]);
 
-        return response($response->body());
+        if (!$response->successful()) {
+            return response()->json([
+                'error' => 'Erro ao buscar arquivo'
+            ], $response->status());
+        }
+
+        return response($response->body(), 200, [
+            'Content-Type' => $response->header('Content-Type', 'text/plain; charset=UTF-8')
+        ]);
     }
 
     public function getFiles($id, Request $request)
     {
-        $user = $request->user();
+        $token = $this->getGitlabToken($request);
+
+        if (!$token) {
+            return $this->unauthorizedResponse();
+        }
 
         $path = $request->query('path', '');
 
-        $response = Http::withOptions([
-            'verify' => false
-        ])->withToken($user->gitlab_token)
+        $response = $this->gitlabClient($token)
             ->get("https://gitlab.com/api/v4/projects/$id/repository/tree", [
                 'path' => $path,
                 'per_page' => 100
             ]);
 
-        return response()->json($response->json());
+        return $this->gitlabJsonResponse($response, 'Erro ao buscar arquivos');
     }
 
     public function members($id, Request $request)
     {
-        $user = $request->user();
+        $token = $this->getGitlabToken($request);
 
-        $response = Http::withOptions([
-            'verify' => false
-        ])->withToken($user->gitlab_token)
+        if (!$token) {
+            return $this->unauthorizedResponse();
+        }
+
+        $response = $this->gitlabClient($token)
             ->get("https://gitlab.com/api/v4/projects/$id/members");
 
-        return response()->json($response->json());
+        return $this->gitlabJsonResponse($response, 'Erro ao buscar membros');
     }
 
     public function getMergeRequests($id, Request $request)
     {
         try {
-            $user = $request->user();
-            if (!$user) return response()->json(['error' => 'Não autenticado'], 401);
+            $token = $this->getGitlabToken($request);
 
-            $response = Http::withToken($user->gitlab_token)
-                ->withOptions(['verify' => false])
+            if (!$token) {
+                return $this->unauthorizedResponse();
+            }
+
+            $response = $this->gitlabClient($token)
                 ->get("https://gitlab.com/api/v4/projects/$id/merge_requests", [
                     'state' => 'all'
                 ]);
 
             if (!$response->successful()) {
-                Log::error("GitLab MR Error: " . $response->body());
-                return response()->json(['error' => 'GitLab API error', 'details' => $response->json()], $response->status());
+                Log::warning("GitLab MR Error", ['status' => $response->status()]);
+
+                return response()->json([
+                    'error' => 'GitLab API error'
+                ], $response->status());
             }
 
             return response()->json($response->json());
         } catch (\Exception $e) {
-            Log::error("ProjectController MR Exception: " . $e->getMessage());
-            return response()->json(['error' => $e->getMessage()], 500);
+            Log::error("ProjectController MR Exception", ['message' => $e->getMessage()]);
+
+            return response()->json([
+                'error' => 'Erro ao buscar merge requests'
+            ], 500);
         }
     }
 
     public function getBranches($id, Request $request)
     {
-        $user = $request->user();
+        $token = $this->getGitlabToken($request);
 
-        if (!$user) {
-            return response()->json(['error' => 'Não autenticado'], 401);
+        if (!$token) {
+            return $this->unauthorizedResponse();
         }
 
-        $response = Http::withToken($user->gitlab_token)
-            ->withOptions([
-                'verify' => false,
-            ])
+        $response = $this->gitlabClient($token)
             ->get("https://gitlab.com/api/v4/projects/$id/repository/branches");
 
-        return response()->json($response->json());
+        return $this->gitlabJsonResponse($response, 'Erro ao buscar branches');
     }
 
     public function getCommits($id, Request $request)
     {
         try {
-            $user = $request->user();
+            $token = $this->getGitlabToken($request);
 
-            if (!$user) {
-                return response()->json(['error' => 'Usuário não autenticado'], 401);
+            if (!$token) {
+                return $this->unauthorizedResponse();
             }
 
-            $branch = $request->query('branch', 'main'); // 👈 AQUI
+            $branch = $request->query('branch', 'main');
 
-            $response = Http::withToken($user->gitlab_token)
-                ->withOptions([
-                    'verify' => false,
-                ])
+            $response = $this->gitlabClient($token)
                 ->get("https://gitlab.com/api/v4/projects/$id/repository/commits", [
                     'ref_name' => $branch,
                     'per_page' => 100
                 ]);
 
-            return response()->json($response->json());
+            return $this->gitlabJsonResponse($response, 'Erro ao buscar commits');
         } catch (\Exception $e) {
             return response()->json([
-                'error' => $e->getMessage()
+                'error' => 'Erro ao buscar commits'
             ], 500);
         }
     }
+
     public function index(Request $request)
     {
-        $user = $request->user();
+        $token = $this->getGitlabToken($request);
+
+        if (!$token) {
+            return $this->unauthorizedResponse();
+        }
 
         $params = [];
 
@@ -217,42 +281,29 @@ class ProjectController extends Controller
             $params = ['owned' => true];
         } elseif ($request->type === 'membership') {
             $params = ['membership' => true];
-        } else {
-            $params = [];
         }
 
-
-        $response = Http::withOptions([
-            'verify' => false // 
-        ])->withToken($user->gitlab_token)
+        $response = $this->gitlabClient($token)
             ->get('https://gitlab.com/api/v4/projects', $params);
 
-        return response()->json($response->json());
+        return $this->gitlabJsonResponse($response, 'Erro ao buscar projetos');
     }
-
-
 
     public function getProjectById($id, Request $request)
     {
-        $user = $request->user();
+        $token = $this->getGitlabToken($request);
 
-        if (!$user->gitlab_token) {
-            return response()->json([
-                'error' => 'Usuário não autenticado ou sem token'
-            ], 401);
+        if (!$token) {
+            return $this->unauthorizedResponse();
         }
 
-        $response = Http::withOptions([
-            'verify' => false // 
-        ])->withToken($user->gitlab_token)
+        $response = $this->gitlabClient($token)
             ->get("https://gitlab.com/api/v4/projects/$id");
 
         if (!$response->successful()) {
             return response()->json([
-                'error' => 'Erro ao buscar projeto',
-                'status' => $response->status(),
-                'body' => $response->body()
-            ], 500);
+                'error' => 'Erro ao buscar projeto'
+            ], $response->status());
         }
 
         return response()->json($response->json());

@@ -11,7 +11,7 @@ export default function MainLayout() {
         <div className="flex min-h-screen overflow-hidden bg-transparent">
             <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
-            <div className="z-[3] flex h-screen min-w-0 flex-1 flex-col gap-4 p-4">
+            <div className="z-[3] flex h-screen min-w-0 flex-1 flex-col gap-3 p-3 sm:gap-4 sm:p-4">
                 <Navbar setSidebarOpen={setSidebarOpen} />
 
                 <main className="tech-panel relative min-w-0 flex-1 overflow-auto px-1 py-1">

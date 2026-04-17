@@ -39,6 +39,7 @@ return [
         'client_id' => env('GITLAB_CLIENT_ID'),
         'client_secret' => env('GITLAB_CLIENT_SECRET'),
         'redirect' => env('GITLAB_REDIRECT_URI'),
+        'ssl_verify' => filter_var(env('GITLAB_SSL_VERIFY', env('GITLAB_VERIFY_SSL', true)), FILTER_VALIDATE_BOOL),
     ],
 
 ];

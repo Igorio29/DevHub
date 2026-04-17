@@ -4,9 +4,14 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProjectController;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/login', [AuthController::class, 'login']);
-Route::get('/auth/gitlab/redirect', [AuthController::class, 'redirectAuthGitlab']);
-Route::get('/auth/gitlab/callback', [AuthController::class, 'handleGitlabCallback']);
+Route::pattern('id', '[0-9]+');
+Route::pattern('sha', '[A-Fa-f0-9]+');
+
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
+Route::middleware('web')->group(function () {
+    Route::get('/auth/gitlab/redirect', [AuthController::class, 'redirectAuthGitlab']);
+    Route::get('/auth/gitlab/callback', [AuthController::class, 'handleGitlabCallback']);
+});
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'show']);

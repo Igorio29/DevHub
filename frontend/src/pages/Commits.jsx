@@ -182,24 +182,24 @@ export default function Commits() {
                     layout
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-[#01040d]/70 px-4 backdrop-blur-sm"
+                    className="fixed inset-0 z-50 flex items-end justify-center bg-[#01040d]/70 p-2 backdrop-blur-sm sm:items-center sm:px-4"
                 >
-                    <div className="tech-panel w-full max-w-3xl overflow-hidden">
-                        <div className="flex items-center justify-between border-b border-white/10 px-6 py-5">
-                            <div>
+                    <div className="tech-panel flex max-h-[92dvh] w-full max-w-3xl flex-col overflow-hidden rounded-[28px] sm:max-h-[88vh]">
+                        <div className="flex items-start justify-between gap-3 border-b border-white/10 px-4 py-4 sm:px-6 sm:py-5">
+                            <div className="min-w-0">
                                 <p className="page-kicker">Branch Explorer</p>
-                                <h2 className="mt-2 text-lg font-semibold">{selectedProject?.project_name}</h2>
+                                <h2 className="mt-2 line-clamp-2 text-base font-semibold sm:text-lg">{selectedProject?.project_name}</h2>
                             </div>
 
                             <button
                                 onClick={() => setModalOpen(false)}
-                                className="rounded-xl border border-white/10 bg-white/5 p-2 text-white/60 transition hover:bg-white/10 hover:text-white"
+                                className="shrink-0 rounded-xl border border-white/10 bg-white/5 p-2 text-white/60 transition hover:bg-white/10 hover:text-white"
                             >
                                 <X size={18} />
                             </button>
                         </div>
 
-                        <div className="border-b border-white/10 px-6 py-5">
+                        <div className="border-b border-white/10 px-4 py-4 sm:px-6 sm:py-5">
                             <label className="mb-2 block text-xs uppercase tracking-[0.22em] text-white/45">
                                 Branch ativa
                             </label>
@@ -219,7 +219,7 @@ export default function Commits() {
                             </div>
                         </div>
 
-                        <div className="max-h-[420px] space-y-3 overflow-y-auto px-6 py-5">
+                        <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-4 py-4 sm:px-6 sm:py-5">
                             {loadingCommits && (
                                 <p className="text-white/50">Carregando commits...</p>
                             )}
@@ -229,7 +229,7 @@ export default function Commits() {
                                     <div
                                         onClick={() => navigate(`/projects/${selectedProject.project_id}/commits/${commit.id}`)}
                                         key={commit.id}
-                                        className="tech-panel-muted cursor-pointer p-4 transition hover:border-cyan-400/20 hover:bg-white/[0.06]"
+                                        className="tech-panel-muted cursor-pointer p-3 transition hover:border-cyan-400/20 hover:bg-white/[0.06] sm:p-4"
                                     >
                                         <p className="text-sm font-medium text-white">
                                             {commit.message}

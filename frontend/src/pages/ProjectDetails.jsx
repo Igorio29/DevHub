@@ -94,12 +94,12 @@ export default function ProjectDetails() {
 
                     <div className="flex-1">
                         <span className="page-kicker">Project Node</span>
-                        <h1 className="mt-2 text-3xl font-bold">{project.name}</h1>
+                        <h1 className="mt-2 text-2xl font-bold sm:text-3xl">{project.name}</h1>
                         <p className="mt-3 max-w-3xl text-sm text-white/60">
                             {project.description || "Sem descrição"}
                         </p>
 
-                        <div className="mt-5 flex flex-wrap gap-4">
+                        <div className="mt-5 grid gap-3 sm:flex sm:flex-wrap sm:gap-4">
                             <div className="tech-panel-muted flex items-center gap-3 px-4 py-3">
                                 <Shield size={16} className="text-cyan-300" />
                                 <div>
@@ -125,7 +125,7 @@ export default function ProjectDetails() {
                             </div>
                         </div>
 
-                        <div className="mt-5 flex -space-x-2">
+                        <div className="mt-5 flex -space-x-2 overflow-x-auto pb-1">
                             {cleanMembers.slice(0, 5).map((member) => (
                                 <img
                                     key={member.id}

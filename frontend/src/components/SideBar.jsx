@@ -53,11 +53,11 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
 
             <aside
                 className={`
-                    fixed top-0 left-0 z-50 m-0 flex h-[calc(100vh-2rem)] flex-col p-4 transition-all duration-300 ease-in-out
+                    fixed top-0 left-0 z-50 m-0 flex h-dvh w-[86vw] max-w-[320px] flex-col p-4 transition-all duration-300 ease-in-out
                     md:relative md:m-4
                     ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
                     md:translate-x-0
-                    ${collapsed ? "w-24" : "w-72"}
+                    ${collapsed ? "md:w-24" : "md:w-72"}
                     tech-panel
                 `}
             >
@@ -122,7 +122,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
                     })}
                 </nav>
 
-                <div className={`mb-6 flex ${collapsed ? "justify-center" : "justify-end"}`}>
+                <div className={`mb-6 hidden md:flex ${collapsed ? "justify-center" : "justify-end"}`}>
                     <button
                         onClick={() => setCollapsed(!collapsed)}
                         className="

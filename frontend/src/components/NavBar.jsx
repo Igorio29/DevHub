@@ -33,9 +33,9 @@ export default function Navbar({ className, setSidebarOpen }) {
 
     return (
         <header
-            className={`tech-panel relative z-50 flex h-20 items-center justify-between px-5 ${className || ""}`}
+            className={`tech-panel relative z-50 flex h-16 items-center justify-between px-3 sm:h-20 sm:px-5 ${className || ""}`}
         >
-            <div className="flex min-w-0 items-center gap-4">
+            <div className="flex min-w-0 items-center gap-3 sm:gap-4">
                 <button
                     onClick={() => setSidebarOpen(true)}
                     className="flex h-11 w-11 items-center justify-center rounded-2xl border border-cyan-400/15 bg-cyan-400/10 text-cyan-300 transition hover:bg-cyan-400/15 md:hidden"
@@ -44,8 +44,8 @@ export default function Navbar({ className, setSidebarOpen }) {
                 </button>
 
                 <div className="min-w-0">
-                    <p className="page-kicker">System View</p>
-                    <h1 className="truncate text-xl font-semibold tracking-[0.02em] text-white">
+                    <p className="page-kicker hidden sm:block">System View</p>
+                    <h1 className="truncate text-base font-semibold tracking-[0.02em] text-white sm:text-xl">
                         {getTitle()}
                     </h1>
                 </div>
@@ -55,7 +55,7 @@ export default function Navbar({ className, setSidebarOpen }) {
                 <div className="relative" ref={menuRef}>
                     <button
                         onClick={() => setOpen(!open)}
-                        className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-2 transition hover:bg-white/[0.08]"
+                        className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.04] px-2 py-2 transition hover:bg-white/[0.08] sm:gap-3 sm:px-3"
                     >
                         {user?.avatar ? (
                             <img
@@ -76,7 +76,7 @@ export default function Navbar({ className, setSidebarOpen }) {
                     </button>
 
                     {open && (
-                        <div className="tech-panel absolute right-0 mt-3 w-48 p-2 z-[99999]">
+                        <div className="tech-panel absolute right-0 mt-3 w-40 p-2 z-[99999] sm:w-48">
                             <Link
                                 to="/profile"
                                 className="block rounded-xl px-3 py-2 text-sm text-zinc-300 transition hover:bg-white/5 hover:text-white"
