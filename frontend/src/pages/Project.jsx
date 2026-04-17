@@ -1,137 +1,149 @@
-import { useEffect, useState } from "react"
-import { getProjects } from "../services/projectServices"
-import { useNavigate } from "react-router-dom"
+import { useEffect, useState } from "react";
+import { FolderGit2, Lock, Sparkles } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { getProjects } from "../services/projectServices";
 
 export default function Project() {
-    const [projects, setProjects] = useState([])
-    const [loading, setLoading] = useState(true)
+    const [projects, setProjects] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState(() => {
-        return localStorage.getItem("projectFilter") || "owned"
-    })
+        return localStorage.getItem("projectFilter") || "owned";
+    });
 
     useEffect(() => {
-        localStorage.setItem("projectFilter", filter)
-    }, [filter])
+        localStorage.setItem("projectFilter", filter);
+    }, [filter]);
 
-
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("token");
     const navigate = useNavigate();
 
     useEffect(() => {
-        setLoading(true)
+        setLoading(true);
 
         getProjects(token, filter)
-            .then(data => {
-                setProjects(data) // 🔥 substitui tudo
+            .then((data) => {
+                setProjects(data);
             })
             .catch(console.error)
-            .finally(() => setLoading(false))
-
-    }, [filter])
+            .finally(() => setLoading(false));
+    }, [filter, token]);
 
     if (loading) {
         return (
-            <div className="p-6 text-gray-500 animate-pulse">
-                Carregando projetos...
+            <div className="page-shell">
+                <div className="tech-panel p-6 text-white/50 animate-pulse">
+                    Carregando projetos...
+                </div>
             </div>
-        )
+        );
     }
 
     if (!Array.isArray(projects)) {
         return (
-            <div className="p-6 text-red-500">
-                Erro ao carregar projetos
+            <div className="page-shell">
+                <div className="tech-panel p-6 text-red-400">
+                    Erro ao carregar projetos.
+                </div>
             </div>
-        )
+        );
     }
-    return (
-        <div className="p-6 space-y-6 text-white">
 
-            {/* HEADER */}
-            <div>
-                <h1 className="text-2xl font-bold">
-                    Projetos
-                </h1>
-                <p className="text-white/60">
-                    Seus projetos no GitLab
-                </p>
-            </div>
-            <div className="flex gap-2">
-                {["owned", "membership"].map(type => (
+    return (
+        <div className="page-shell space-y-6">
+            <section className="page-header">
+                <span className="page-kicker">Projects Matrix</span>
+                <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+                    <div className="space-y-2">
+                        <h1 className="page-title">Projetos conectados ao ecossistema do DevHub</h1>
+                        <p className="page-subtitle">
+                            Uma camada mais limpa para leitura rápida de ownership, atividade recente e visibilidade do workspace.
+                        </p>
+                    </div>
+
+                    <div className="tech-panel-muted flex items-center gap-3 px-4 py-3">
+                        <Sparkles size={18} className="text-cyan-300" />
+                        <div>
+                            <p className="text-xs uppercase tracking-[0.2em] text-white/45">Projects Loaded</p>
+                            <p className="text-lg font-semibold">{projects.length}</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section className="flex flex-wrap gap-3">
+                {["owned", "membership"].map((type) => (
                     <button
                         key={type}
                         onClick={() => setFilter(type)}
-                        className={` px-4 py-2 rounded-lg text-sm transition 
-        ${filter === type
-                                ? "bg-blue-600 text-white"
-                                : "bg-white/5 text-white/60 hover:bg-white/10"
-                            }`}
+                        className={`tech-button ${filter === type ? "tech-button-active" : ""}`}
                     >
-                        {type === "owned" && "Meus projetos"}
-                        {type === "membership" && "Participando"}
+                        {type === "owned" ? "Meus projetos" : "Participando"}
                     </button>
                 ))}
-            </div>
+            </section>
 
-            {/* CARD RESUMO */}
-            <div className="bg-white/5 border border-white/10 backdrop-blur rounded-2xl p-4 flex justify-between items-center">
-                <span className="text-white/70">Total de projetos</span>
-                <span className="text-xl font-bold text-blue-400">
-                    {projects.length}
-                </span>
-            </div>
+            <section className="tech-panel flex items-center justify-between gap-4 p-5">
+                <div>
+                    <p className="text-sm uppercase tracking-[0.2em] text-white/45">Resumo</p>
+                    <h2 className="mt-2 text-xl font-semibold text-white">Portfólio sincronizado</h2>
+                </div>
 
-            {/* GRID */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="rounded-2xl border border-cyan-400/15 bg-cyan-400/10 px-4 py-3 text-right">
+                    <p className="text-xs uppercase tracking-[0.2em] text-cyan-200/70">Total</p>
+                    <p className="text-2xl font-bold text-cyan-300">{projects.length}</p>
+                </div>
+            </section>
 
-                {projects.map(project => (
-                    <div onClick={() => navigate(`/project/${project.id}`)}
+            <section className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                {projects.map((project) => (
+                    <article
+                        onClick={() => navigate(`/project/${project.id}`)}
                         key={project.id}
-                        className="cursor-pointer bg-white/5 border border-white/10 backdrop-blur rounded-2xl p-4 space-y-3 hover:bg-white/10 transition"
+                        className="tech-panel group cursor-pointer p-5 transition-all duration-300 hover:-translate-y-1 hover:border-cyan-400/20"
                     >
+                        <div className="mb-5 flex items-start justify-between gap-4">
+                            <div className="flex items-center gap-4 min-w-0">
+                                {project.avatar_url ? (
+                                    <img
+                                        src={project.avatar_url}
+                                        className="h-14 w-14 rounded-2xl border border-white/10 object-cover"
+                                    />
+                                ) : (
+                                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-cyan-400/20 bg-cyan-400/10 font-bold text-cyan-300">
+                                        {project.name?.charAt(0)}
+                                    </div>
+                                )}
 
-                        {/* HEADER */}
-                        <div className="flex items-center gap-3">
-                            {project.avatar_url ? (
-                                <img
-                                    src={project.avatar_url}
-                                    className="w-12 h-12 rounded"
-                                />
-                            ) : (
-                                <div className="w-12 h-12 bg-blue-600 flex items-center justify-center rounded font-bold">
-                                    {project.name?.charAt(0)}
+                                <div className="min-w-0">
+                                    <h3 className="truncate text-lg font-semibold text-white">{project.name}</h3>
+                                    <p className="mt-1 flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-white/45">
+                                        <Lock size={12} />
+                                        {project.visibility}
+                                    </p>
                                 </div>
-                            )}
-
-                            <div>
-                                <h3 className="font-semibold">
-                                    {project.name}
-                                </h3>
-                                <p className="text-xs text-white/50">
-                                    {project.visibility}
-                                </p>
                             </div>
-                        </div>
 
-                        {/* DESCRIÇÃO */}
-                        <p className="text-sm text-white/70">
-                            {project.description || "Sem descrição"}
-                        </p>
-
-                        {/* FOOTER */}
-                        <div className="flex justify-between text-xs text-white/50">
-                            <span>Última atividade</span>
-                            <span>
-                                {new Date(project.last_activity_at).toLocaleDateString()}
+                            <span className="rounded-full border border-white/10 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-white/45">
+                                GitLab
                             </span>
                         </div>
 
-                        {/* BOTÃO */}
+                        <p className="min-h-16 text-sm leading-6 text-white/65">
+                            {project.description || "Sem descrição cadastrada para este projeto."}
+                        </p>
 
-                    </div>
+                        <div className="mt-6 flex items-center justify-between border-t border-white/10 pt-4 text-xs text-white/45">
+                            <span className="inline-flex items-center gap-2">
+                                <FolderGit2 size={14} className="text-cyan-300" />
+                                Última atividade
+                            </span>
+                            <span className="font-mono text-white/75">
+                                {new Date(project.last_activity_at).toLocaleDateString()}
+                            </span>
+                        </div>
+                    </article>
                 ))}
-
-            </div>
+            </section>
         </div>
-    )
+    );
 }

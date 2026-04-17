@@ -1,171 +1,103 @@
-import { Link, useLocation, useNavigate } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom";
+import { Menu, PanelTop, UserCircle2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useUser } from "../context/UserContext";
 
 export default function Navbar({ className, setSidebarOpen }) {
-    const { pathname } = useLocation()
-    const navigate = useNavigate();
-    const [open, setOpen] = useState(false)
-    const menuRef = useRef()
-    const { user, setUser, fetchUser } = useUser()
-
+    const { pathname } = useLocation();
+    const [open, setOpen] = useState(false);
+    const menuRef = useRef();
+    const { user } = useUser();
 
     useEffect(() => {
         function handleClickOutside(e) {
             if (menuRef.current && !menuRef.current.contains(e.target)) {
-                setOpen(false)
+                setOpen(false);
             }
         }
 
-        document.addEventListener("mousedown", handleClickOutside)
-        return () => document.removeEventListener("mousedown", handleClickOutside)
-    }, [])
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
 
     const getTitle = () => {
         switch (pathname) {
-            case "/dashboard": return "Dashboard"
-            case "/projects": return "Projetos"
-            case "/commits": return "Commits"
-            case "/merge-requests": return "Merge Requests"
-            case "/environments": return "Ambientes"
-            default: return "DevHub"
+            case "/dashboard": return "Dashboard";
+            case "/projects": return "Projetos";
+            case "/commits": return "Commits";
+            case "/merge-requests": return "Merge Requests";
+            case "/environments": return "Ambientes";
+            default: return "DevHub";
         }
-    }
-
-    const handleLogout = () => {
-        // Limpa o token ou dados de sessão se necessário
-        localStorage.removeItem("token");
-        navigate("/");
     };
 
     return (
-        <header className={`
-            relative z-50
-      h-16
-      flex items-center justify-between
-      px-6
+        <header
+            className={`tech-panel relative z-50 flex h-20 items-center justify-between px-5 ${className || ""}`}
+        >
+            <div className="flex min-w-0 items-center gap-4">
+                <button
+                    onClick={() => setSidebarOpen(true)}
+                    className="flex h-11 w-11 items-center justify-center rounded-2xl border border-cyan-400/15 bg-cyan-400/10 text-cyan-300 transition hover:bg-cyan-400/15 md:hidden"
+                >
+                    <Menu size={18} />
+                </button>
 
-      bg-white/5 backdrop-blur-xl
-      border border-white/10
-      rounded-2xl
+                <div className="min-w-0">
+                    <p className="page-kicker">System View</p>
+                    <h1 className="truncate text-xl font-semibold tracking-[0.02em] text-white">
+                        {getTitle()}
+                    </h1>
+                </div>
+            </div>
 
-      shadow-[0_0_20px_rgba(59,130,246,0.08)]
-      relative
-      ${className}
-    `}>
-
-            <button
-                onClick={() => setSidebarOpen(true)}
-                className="
-    md:hidden
-    flex items-center justify-center
-
-    w-11 h-11
-    rounded-xl
-
-    bg-gradient-to-br from-blue-500 to-blue-700
-    text-white
-
-    shadow-lg shadow-blue-900/30
-
-    hover:scale-105 hover:shadow-blue-500/40
-    active:scale-95
-
-    transition-all duration-200
-  "
-            >
-                ☰
-            </button>
-
-            {/* TÍTULO */}
-            <h1 className="text-white text-lg font-semibold tracking-wide">
-                {getTitle()}
-            </h1>
-
-            {/* AÇÕES */}
             <div className="flex items-center gap-3">
-
-                <div className="flex items-center gap-4">
-
-                    {/* STATUS */}
-                    <div className="hidden md:flex items-center gap-2 text-xs text-zinc-400">
-                        <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                        Online
-                    </div>
-
-                    {/* AVATAR */}
-                    <div className="relative " ref={menuRef}>
-
-                        <div
-                            onClick={() => setOpen(!open)}
-                            className={`cursor-pointer ${open ? "bg-[#0a0f1c]" : "bg-[#0b1727]"} py-2 px-3 rounded-full flex items-center gap-2`}
-                        >
-                            <h1 className="text-white">{user?.name}</h1>
-                            {user?.avatar ? (
-                                <img
-                                    src={user?.avatar}
-                                    className="w-9 h-9 rounded-full border border-white/10 object-cover"
-                                />
-                            ) : (
-                                <div className="w-9 h-9 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
-                                    {user?.name?.[0]}
-                                </div>
-                            )}
-                        </div>
-
-                        {/* MENU */}
-                        {open && (
-                            <div className="
-      absolute right-0 mt-2 w-44
-      bg-[#0a0f1c]/90 backdrop-blur-xl
-      border border-white/10
-      rounded-xl
-      shadow-[0_0_20px_rgba(59,130,246,0.15)]
-      p-2
-      z-[99999]
-    ">
-
-                                {/* PROFILE */}
-                                <Link
-                                    to="/profile"
-                                    className="
-       w-full text-left px-3 py-2 rounded-lg
-    text-sm text-zinc-300
-    hover:bg-white/5 hover:text-white w-full text-left px-3 py-2 rounded-lg
-    text-sm text-zinc-300
-    hover:bg-white/5 hover:text-white
-    transition
-    block
-    transition
-      ">
-                                    Profile
-                                </Link>
-
-                                {/* LOGOUT */}
-                                <button
-                                    onClick={() => {
-                                        localStorage.removeItem("user")
-                                        localStorage.removeItem("token")
-                                        window.location.href = "/"
-                                    }}
-                                    className="
-          w-full text-left px-3 py-2 rounded-lg
-          text-sm text-red-400
-          hover:bg-red-500/10
-          transition
-        "
-                                >
-                                    Logout
-                                </button>
-
+                <div className="relative" ref={menuRef}>
+                    <button
+                        onClick={() => setOpen(!open)}
+                        className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-2 transition hover:bg-white/[0.08]"
+                    >
+                        {user?.avatar ? (
+                            <img
+                                src={user.avatar}
+                                className="h-10 w-10 rounded-2xl border border-white/10 object-cover"
+                            />
+                        ) : (
+                            <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-cyan-400/15 bg-cyan-400/10 text-cyan-300">
+                                <UserCircle2 size={20} />
                             </div>
                         )}
 
-                    </div>
+                        <div className="hidden text-left sm:block">
+                            <p className="max-w-40 truncate text-sm font-medium text-white">
+                                {user?.name || "Usuário"}
+                            </p>
+                        </div>
+                    </button>
 
+                    {open && (
+                        <div className="tech-panel absolute right-0 mt-3 w-48 p-2 z-[99999]">
+                            <Link
+                                to="/profile"
+                                className="block rounded-xl px-3 py-2 text-sm text-zinc-300 transition hover:bg-white/5 hover:text-white"
+                            >
+                                Perfil
+                            </Link>
+
+                            <button
+                                onClick={() => {
+                                    localStorage.removeItem("user");
+                                    localStorage.removeItem("token");
+                                    window.location.href = "/";
+                                }}
+                                className="w-full rounded-xl px-3 py-2 text-left text-sm text-red-400 transition hover:bg-red-500/10"
+                            >
+                                Logout
+                            </button>
+                        </div>
+                    )}
                 </div>
-
             </div>
         </header>
-    )
+    );
 }

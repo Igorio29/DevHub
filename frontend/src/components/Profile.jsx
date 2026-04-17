@@ -1,162 +1,132 @@
-import { useEffect, useState } from "react"
-import { useUser } from "../context/UserContext"
-import api from "../services/api"
-import { showError, showSuccess } from "../utils/toast"
+import { useEffect, useState } from "react";
+import { ImagePlus, Save, UserRound } from "lucide-react";
+import { useUser } from "../context/UserContext";
+import api from "../services/api";
+import { showError, showSuccess } from "../utils/toast";
 
 export default function Profile() {
-
-    const { user, setUser, fetchUser, loading: userLoading } = useUser()
-    const [loading, setLoading] = useState(false)
-
+    const { user, fetchUser, loading: userLoading } = useUser();
+    const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
         avatar: ""
-    })
+    });
 
     useEffect(() => {
         if (user) {
             setFormData({
                 name: user.name || "",
                 avatar: user.avatar || ""
-            })
+            });
         }
-    }, [user])
+    }, [user]);
 
     if (userLoading || !user) {
-        return <div className="text-white p-6">Carregando...</div>
+        return <div className="page-shell text-white">Carregando...</div>;
     }
 
     function handleChange(e) {
-        setFormData(prev => ({
+        setFormData((prev) => ({
             ...prev,
             [e.target.name]: e.target.value
-        }))
+        }));
     }
 
     async function handleSubmit(e) {
-        e.preventDefault()
-        setLoading(true)
+        e.preventDefault();
+        setLoading(true);
 
         try {
-            console.log(formData)
-
-            await api.put("/user", formData)
-
-            await fetchUser()
-
-            showSuccess( "Alterado com sucesso");
-
-            } catch (err) {
-            showError("Erro ao atualizar")
+            await api.put("/user", formData);
+            await fetchUser();
+            showSuccess("Alterado com sucesso");
+        } catch (err) {
+            showError("Erro ao atualizar");
         }
 
-        setLoading(false)
+        setLoading(false);
     }
+
     return (
-        <div className="p-6 max-w-xl mx-auto">
-
-            {/* Header */}
-            <div className="mb-6">
-                <h1 className="text-2xl font-semibold text-white">Meu Perfil</h1>
-                <p className="text-sm text-zinc-400">
-                    Atualize suas informações pessoais
+        <div className="page-shell mx-auto max-w-3xl space-y-6">
+            <section className="page-header">
+                <span className="page-kicker">Identity Settings</span>
+                <h1 className="page-title">Meu perfil</h1>
+                <p className="page-subtitle">
+                    Atualize os dados da sua identidade visual dentro do DevHub.
                 </p>
-            </div>
+            </section>
 
-            <form
-                onSubmit={handleSubmit}
-                className="
-      space-y-6
-      bg-zinc-900/80 backdrop-blur
-      p-6 rounded-2xl
-      border border-zinc-800
-      shadow-xl
-    "
-            >
+            <form onSubmit={handleSubmit} className="tech-panel space-y-6 p-6">
+                <div className="grid gap-6 lg:grid-cols-[220px_1fr]">
+                    <div className="tech-panel-muted flex flex-col items-center gap-4 p-5">
+                        <div className="group relative">
+                            {formData.avatar ? (
+                                <img
+                                    src={formData.avatar}
+                                    alt="avatar"
+                                    className="h-28 w-28 rounded-3xl border border-white/10 object-cover transition group-hover:scale-[1.02]"
+                                />
+                            ) : (
+                                <div className="flex h-28 w-28 items-center justify-center rounded-3xl border border-cyan-400/15 bg-cyan-400/10 text-cyan-300">
+                                    <UserRound size={28} />
+                                </div>
+                            )}
+                        </div>
 
-                {/* Avatar */}
-                <div className="flex flex-col items-center gap-3">
-
-                    <div className="relative group">
-                        <img
-                            src={formData.avatar}
-                            alt="avatar"
-                            className="
-            w-24 h-24 rounded-full object-cover
-            border-2 border-zinc-700
-            transition
-            group-hover:scale-105
-          "
-                        />
-
-                        {/* Glow sutil */}
-                        <div className="
-          absolute inset-0 rounded-full
-          bg-blue-500/10 opacity-0
-          group-hover:opacity-100
-          transition
-        " />
+                        <div className="text-center">
+                            <p className="text-sm font-medium text-white">{formData.name || "Usuário"}</p>
+                            <p className="text-xs text-white/45">Preview do perfil</p>
+                        </div>
                     </div>
 
-                    <input
-                        type="text"
-                        name="avatar"
-                        placeholder="URL do avatar"
-                        value={formData.avatar || ""}
-                        onChange={handleChange}
-                        className="
-          w-full px-3 py-2 rounded-lg
-          bg-zinc-800 text-white
-          border border-zinc-700
-          placeholder:text-zinc-500
-          focus:outline-none focus:ring-2 focus:ring-blue-500
-          transition
-        "
-                    />
+                    <div className="space-y-5">
+                        <div>
+                            <label className="mb-2 block text-xs uppercase tracking-[0.18em] text-white/45">
+                                URL do avatar
+                            </label>
+                            <div className="relative">
+                                <ImagePlus size={16} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-cyan-300" />
+                                <input
+                                    type="text"
+                                    name="avatar"
+                                    placeholder="https://..."
+                                    value={formData.avatar || ""}
+                                    onChange={handleChange}
+                                    className="w-full rounded-2xl border border-white/10 bg-[#07101f] py-3 pl-11 pr-4 text-white placeholder:text-white/30 focus:border-cyan-400/35 focus:outline-none"
+                                />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className="mb-2 block text-xs uppercase tracking-[0.18em] text-white/45">
+                                Nome
+                            </label>
+                            <div className="relative">
+                                <UserRound size={16} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-cyan-300" />
+                                <input
+                                    type="text"
+                                    name="name"
+                                    value={formData.name || ""}
+                                    onChange={handleChange}
+                                    className="w-full rounded-2xl border border-white/10 bg-[#07101f] py-3 pl-11 pr-4 text-white placeholder:text-white/30 focus:border-cyan-400/35 focus:outline-none"
+                                />
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                {/* Nome */}
-                <div>
-                    <label className="block text-sm text-zinc-400 mb-1">
-                        Nome
-                    </label>
-
-                    <input
-                        type="text"
-                        name="name"
-                        value={formData.name || ""}
-                        onChange={handleChange}
-                        className="
-          w-full px-3 py-2 rounded-lg
-          bg-zinc-800 text-white
-          border border-zinc-700
-          placeholder:text-zinc-500
-          focus:outline-none focus:ring-2 focus:ring-blue-500
-          transition
-        "
-                    />
+                <div className="flex justify-end border-t border-white/10 pt-5">
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="inline-flex items-center gap-2 rounded-2xl border border-cyan-400/20 bg-cyan-400/10 px-5 py-3 text-sm font-medium text-cyan-100 transition hover:bg-cyan-400/15 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                        <Save size={16} />
+                        {loading ? "Salvando..." : "Salvar alterações"}
+                    </button>
                 </div>
-
-                {/* Divider */}
-                <div className="h-px bg-zinc-800" />
-
-                {/* Botão */}
-                <button
-                    type="submit"
-                    disabled={loading}
-                    className="
-        w-full py-2.5 rounded-lg
-        bg-blue-600 hover:bg-blue-700
-        text-white font-medium
-        transition
-        disabled:opacity-50
-        disabled:cursor-not-allowed
-      "
-                >
-                    {loading ? "Salvando..." : "Salvar alterações"}
-                </button>
-
             </form>
         </div>
-    )
+    );
 }

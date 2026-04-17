@@ -1,10 +1,78 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --bg-0: #050816;
+  --bg-1: #091224;
+  --bg-2: #0f1b32;
+  --panel: rgba(10, 19, 37, 0.72);
+  --panel-strong: rgba(14, 24, 46, 0.9);
+  --border: rgba(148, 163, 184, 0.16);
+  --border-strong: rgba(96, 165, 250, 0.22);
+  --text: #e6f0ff;
+  --muted: rgba(214, 223, 235, 0.62);
+  --brand: #5ab2ff;
+  --brand-strong: #1d4ed8;
+  --accent: #19f0ff;
+  --success: #34d399;
+  --danger: #f87171;
+}
+
+html {
+  background:
+    radial-gradient(circle at top left, rgba(25, 240, 255, 0.1), transparent 28%),
+    radial-gradient(circle at 85% 12%, rgba(90, 178, 255, 0.18), transparent 32%),
+    linear-gradient(160deg, var(--bg-0), var(--bg-1) 45%, var(--bg-2));
+  color: var(--text);
+}
 
 body {
   margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  font-family: "Space Grotesk", sans-serif;
+  background: transparent;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+body::before {
+  background:
+    linear-gradient(rgba(122, 162, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(122, 162, 255, 0.05) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(circle at center, black 42%, transparent 88%);
+}
+
+body::after {
+  background:
+    radial-gradient(circle at center, rgba(25, 240, 255, 0.08), transparent 45%),
+    radial-gradient(circle at 20% 80%, rgba(37, 99, 235, 0.12), transparent 35%);
+  filter: blur(24px);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+code,
+pre,
+.font-mono {
+  font-family: "JetBrains Mono", monospace;
 }
 
 input:-webkit-autofill {
@@ -18,9 +86,9 @@ input:-webkit-autofill:focus {
   -webkit-text-fill-color: white !important;
 }
 
-/* scrollbar geral */
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -28,11 +96,83 @@ input:-webkit-autofill:focus {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
+  background: linear-gradient(180deg, rgba(90, 178, 255, 0.4), rgba(25, 240, 255, 0.24));
   border-radius: 999px;
   transition: background 0.3s;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.4);
+  background: linear-gradient(180deg, rgba(90, 178, 255, 0.65), rgba(25, 240, 255, 0.38));
+}
+
+@layer components {
+  .page-shell {
+    @apply p-6 text-white;
+  }
+
+  .page-header {
+    @apply flex flex-col gap-2 rounded-3xl border p-6;
+    background:
+      linear-gradient(135deg, rgba(8, 17, 34, 0.9), rgba(14, 25, 49, 0.78)),
+      radial-gradient(circle at top right, rgba(90, 178, 255, 0.14), transparent 35%);
+    border-color: var(--border);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.05),
+      0 24px 80px rgba(2, 6, 23, 0.35);
+  }
+
+  .page-kicker {
+    @apply text-xs font-semibold uppercase tracking-[0.28em];
+    color: rgba(122, 162, 255, 0.72);
+  }
+
+  .page-title {
+    @apply text-3xl font-bold tracking-tight;
+  }
+
+  .page-subtitle {
+    color: var(--muted);
+  }
+
+  .tech-panel {
+    @apply rounded-3xl border backdrop-blur-xl;
+    background: linear-gradient(180deg, rgba(9, 16, 31, 0.82), rgba(14, 23, 43, 0.7));
+    border-color: var(--border);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.05),
+      0 18px 60px rgba(2, 6, 23, 0.28);
+  }
+
+  .tech-panel-muted {
+    @apply rounded-2xl border backdrop-blur-xl;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+    border-color: rgba(148, 163, 184, 0.12);
+  }
+
+  .tech-button {
+    @apply rounded-xl border px-4 py-2 text-sm font-medium transition-all duration-300;
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(148, 163, 184, 0.12);
+    color: rgba(226, 232, 240, 0.74);
+  }
+
+  .tech-button:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+    transform: translateY(-1px);
+  }
+
+  .tech-button-active {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.28), rgba(25, 240, 255, 0.12));
+    border-color: var(--border-strong);
+    color: white;
+    box-shadow: 0 10px 40px rgba(37, 99, 235, 0.18);
+  }
+
+  .tech-badge {
+    @apply inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium uppercase tracking-[0.18em];
+    background: rgba(90, 178, 255, 0.08);
+    border-color: rgba(90, 178, 255, 0.16);
+    color: rgba(186, 230, 253, 0.85);
+  }
 }

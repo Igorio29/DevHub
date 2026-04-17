@@ -1,22 +1,21 @@
 import { Outlet } from "react-router-dom";
-import Sidebar from "../../components/SideBar";
-import Navbar from "../../components/NavBar";
 import { ToastContainer } from "react-toastify";
 import { useState } from "react";
-
+import Sidebar from "../../components/SideBar";
+import Navbar from "../../components/NavBar";
 
 export default function MainLayout() {
-    const [sidebarOpen, setSidebarOpen] = useState(false)
-    return (
-        <div className="flex min-h-screen overflow-hidden bg-[#0b1727]">
+    const [sidebarOpen, setSidebarOpen] = useState(false);
 
+    return (
+        <div className="flex min-h-screen overflow-hidden bg-transparent">
             <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
             <div className="z-[3] flex h-screen min-w-0 flex-1 flex-col gap-4 p-4">
-                {/* Adicione um z-index maior aqui para garantir que o dropdown flutue sobre o main */}
                 <Navbar setSidebarOpen={setSidebarOpen} />
-                <main className="relative z-10 min-w-0 flex-1 overflow-auto rounded-2xl border border-white/10 bg-[#172332] p-6 text-white">
-                    <div className="min-w-0">
+
+                <main className="tech-panel relative min-w-0 flex-1 overflow-auto px-1 py-1">
+                    <div className="min-w-0 rounded-[22px] border border-white/5 bg-[linear-gradient(180deg,rgba(6,11,23,0.42),rgba(10,18,35,0.18))]">
                         <ToastContainer
                             position="top-center"
                             autoClose={3000}
@@ -32,8 +31,6 @@ export default function MainLayout() {
                     </div>
                 </main>
             </div>
-
         </div>
-
-    )
-};
+    );
+}
