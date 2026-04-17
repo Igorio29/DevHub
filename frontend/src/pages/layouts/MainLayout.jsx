@@ -8,15 +8,15 @@ import { useState } from "react";
 export default function MainLayout() {
     const [sidebarOpen, setSidebarOpen] = useState(false)
     return (
-        <div className="flex min-h-screen bg-[#0b1727]">
+        <div className="flex min-h-screen overflow-hidden bg-[#0b1727]">
 
             <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
-            <div className="flex-1 h-screen p-4 z-[3] flex flex-col gap-4">
+            <div className="z-[3] flex h-screen min-w-0 flex-1 flex-col gap-4 p-4">
                 {/* Adicione um z-index maior aqui para garantir que o dropdown flutue sobre o main */}
                 <Navbar setSidebarOpen={setSidebarOpen} />
-                <main className="relative z-10 flex-1 bg-[#172332] border border-white/10 rounded-2xl text-white p-6 overflow-auto">
-                    <div className="">
+                <main className="relative z-10 min-w-0 flex-1 overflow-auto rounded-2xl border border-white/10 bg-[#172332] p-6 text-white">
+                    <div className="min-w-0">
                         <ToastContainer
                             position="top-center"
                             autoClose={3000}
