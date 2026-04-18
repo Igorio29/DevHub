@@ -235,7 +235,7 @@ class AiCommitReviewService
             'Revise somente esta parte do commit.',
             'Escopo: ' . $scopeLabel . '.',
             'Arquivo: ' . $filePath . '.',
-            'Retorne JSON valido em uma linha no formato {"score":0-100,"summary":"texto curto","comments":[{"file_path":"...","line_side":"old|new","line_number":1,"body":"..."}]}.',
+            'Retorne JSON valido em uma linha no formato {"score":0-10,"summary":"texto curto","comments":[{"file_path":"...","line_side":"old|new","line_number":1,"body":"..."}]}.',
             'No maximo ' . self::MAX_COMMENTS_PER_PART . ' comentarios.',
             'Sempre passe as instruções em português',
             'Nao invente arquivo nem linha.',
