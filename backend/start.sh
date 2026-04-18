@@ -3,7 +3,6 @@ set -eu
 
 echo "Starting Laravel container"
 
-PORT="${PORT:-8000}"
 DB_CONNECTION="${DB_CONNECTION:-mysql}"
 
 echo "Clearing cached configuration"
@@ -33,5 +32,5 @@ fi
 echo "Running migrations"
 php artisan migrate --force
 
-echo "Starting Laravel server on port ${PORT}"
-exec php artisan serve --host=0.0.0.0 --port="${PORT}"
+echo "Starting Laravel server on port 8000"
+exec php artisan serve --host=0.0.0.0 --port=8000
