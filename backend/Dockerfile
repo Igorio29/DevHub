@@ -6,10 +6,12 @@ RUN apt-get update && apt-get install -y \
     git unzip libzip-dev zip \
     && docker-php-ext-install zip pdo pdo_mysql
 
-COPY . .
-
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+COPY . .
 
 RUN composer install --no-dev --optimize-autoloader
 
-CMD php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT
+RUN chmod +x /app/start.sh
+
+CMD ["/app/start.sh"]
