@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Config;
@@ -44,6 +45,38 @@ class ProjectController extends Controller
         return response()->json($response->json());
     }
 
+    private function gitlabConnectionErrorResponse(ConnectionException $exception)
+    {
+        $message = $this->normalizeGitlabConnectionMessage($exception);
+
+        Log::warning('GitLab connection failure', [
+            'message' => $exception->getMessage(),
+        ]);
+
+        return response()->json([
+            'error' => $message,
+        ], 503);
+    }
+
+    private function normalizeGitlabConnectionMessage(ConnectionException $exception): string
+    {
+        $message = (string) $exception->getMessage();
+
+        if (str_contains($message, 'Could not resolve host: gitlab.com')) {
+            return 'GitLab indisponivel: falha ao resolver o host gitlab.com.';
+        }
+
+        if (str_contains($message, 'cURL error 60')) {
+            return 'GitLab indisponivel: falha na validacao SSL do PHP/cURL.';
+        }
+
+        if (str_contains($message, 'cURL error 28')) {
+            return 'GitLab indisponivel: tempo limite excedido ao consultar a API.';
+        }
+
+        return 'GitLab indisponivel no momento.';
+    }
+
     public function getCommitDiff($projectId, $sha, Request $request)
     {
         try {
@@ -57,6 +90,8 @@ class ProjectController extends Controller
                 ->get("https://gitlab.com/api/v4/projects/{$projectId}/repository/commits/{$sha}/diff");
 
             return $this->gitlabJsonResponse($response, 'Erro ao buscar diff do commit');
+        } catch (ConnectionException $e) {
+            return $this->gitlabConnectionErrorResponse($e);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Erro ao buscar diff do commit'
@@ -77,6 +112,8 @@ class ProjectController extends Controller
                 ->get("https://gitlab.com/api/v4/projects/{$projectId}/repository/commits/{$sha}");
 
             return $this->gitlabJsonResponse($response, 'Erro ao buscar commit');
+        } catch (ConnectionException $e) {
+            return $this->gitlabConnectionErrorResponse($e);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Erro ao buscar commit'
@@ -219,6 +256,8 @@ class ProjectController extends Controller
             }
 
             return response()->json($response->json());
+        } catch (ConnectionException $e) {
+            return $this->gitlabConnectionErrorResponse($e);
         } catch (\Exception $e) {
             Log::error("ProjectController MR Exception", ['message' => $e->getMessage()]);
 
@@ -260,6 +299,8 @@ class ProjectController extends Controller
                 ]);
 
             return $this->gitlabJsonResponse($response, 'Erro ao buscar commits');
+        } catch (ConnectionException $e) {
+            return $this->gitlabConnectionErrorResponse($e);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Erro ao buscar commits'

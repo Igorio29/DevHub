@@ -42,4 +42,24 @@ return [
         'ssl_verify' => filter_var(env('GITLAB_SSL_VERIFY', env('GITLAB_VERIFY_SSL', true)), FILTER_VALIDATE_BOOL),
     ],
 
+    'ai' => [
+        'driver' => env('AI_DRIVER', 'openai'),
+    ],
+
+    'openai' => [
+        'api_key' => env('OPENAI_API_KEY'),
+        'model' => env('OPENAI_MODEL', 'gpt-5.2'),
+        'timeout' => env('OPENAI_TIMEOUT', 45),
+        'ssl_verify' => filter_var(env('OPENAI_SSL_VERIFY', env('AI_SSL_VERIFY', true)), FILTER_VALIDATE_BOOL),
+        'ca_bundle' => env('OPENAI_CA_BUNDLE', env('AI_CA_BUNDLE')),
+    ],
+
+    'groq' => [
+        'api_key' => env('GROQ_API_KEY'),
+        'model' => env('GROQ_MODEL', 'openai/gpt-oss-120b'),
+        'timeout' => env('GROQ_TIMEOUT', 45),
+        'ssl_verify' => filter_var(env('GROQ_SSL_VERIFY', env('AI_SSL_VERIFY', true)), FILTER_VALIDATE_BOOL),
+        'ca_bundle' => env('GROQ_CA_BUNDLE', env('AI_CA_BUNDLE')),
+    ],
+
 ];

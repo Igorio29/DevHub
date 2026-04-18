@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CommitCommentController;
 use App\Http\Controllers\ProjectController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,4 +28,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/last-commits', [ProjectController::class, 'getLastCommitAllProject']);
     Route::get('/projects/{id}/commits/{sha}/diff', [ProjectController::class, 'getCommitDiff']);
     Route::get('/projects/{id}/commits/{sha}', [ProjectController::class, 'getCommit']);
+    Route::get('/projects/{id}/commits/{sha}/comments', [CommitCommentController::class, 'index']);
+    Route::get('/projects/{id}/commits/{sha}/comments/permission', [CommitCommentController::class, 'permission']);
+    Route::post('/projects/{id}/commits/{sha}/comments', [CommitCommentController::class, 'store']);
+    Route::post('/projects/{id}/commits/{sha}/comments/ai-review', [CommitCommentController::class, 'generateAiReview']);
 });

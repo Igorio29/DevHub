@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -27,4 +28,9 @@ class User extends Authenticatable
         'remember_token',
         'gitlab_token',
     ];
+
+    public function commitComments(): HasMany
+    {
+        return $this->hasMany(CommitComment::class);
+    }
 }
