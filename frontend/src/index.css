@@ -175,4 +175,40 @@ input:-webkit-autofill:focus {
     border-color: rgba(90, 178, 255, 0.16);
     color: rgba(186, 230, 253, 0.85);
   }
+
+  .project-tabs-nav {
+    @apply overflow-hidden rounded-3xl border;
+    background: linear-gradient(180deg, rgba(8, 16, 30, 0.88), rgba(11, 21, 39, 0.82));
+    border-color: var(--border);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.04),
+      0 18px 60px rgba(2, 6, 23, 0.22);
+  }
+
+  .project-tabs-scroll {
+    @apply flex overflow-x-auto px-2;
+    scrollbar-width: none;
+  }
+
+  .project-tabs-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .project-tab {
+    @apply relative whitespace-nowrap border-b-2 border-transparent px-4 py-4 text-sm font-medium transition-all duration-200;
+    color: rgba(226, 232, 240, 0.64);
+  }
+
+  .project-tab:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .project-tab-active {
+    color: white;
+    border-bottom-color: rgba(34, 211, 238, 0.88);
+    background:
+      linear-gradient(180deg, rgba(34, 211, 238, 0.12), rgba(34, 211, 238, 0.02)),
+      rgba(255, 255, 255, 0.02);
+  }
 }
