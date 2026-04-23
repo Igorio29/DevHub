@@ -133,7 +133,7 @@ export default function Dashboard() {
     <div className="page-shell space-y-6">
       <section className="page-header">
         <span className="page-kicker">Command Center</span>
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        <div className="flex flex-col gap-6">
           <div className="max-w-3xl space-y-3">
             <h1 className="page-title">
               {user?.name ? `${user.name}, ` : ""}
@@ -144,7 +144,7 @@ export default function Dashboard() {
             </p>
           </div>
 
-          <div className="tech-panel-muted flex min-w-[260px] flex-col gap-2 p-4">
+          <div className="tech-panel-muted flex w-full max-w-md flex-col gap-2 p-4">
             <span className="page-kicker">Gerado em</span>
             <span className="text-2xl font-bold text-white">{formatDateTime(dashboard?.generated_at)}</span>
             <span className="text-sm text-white/60">
@@ -236,7 +236,7 @@ export default function Dashboard() {
         </div>
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-[1.3fr_0.9fr]">
+      <section className="grid grid-cols-1 gap-6">
         <article className="tech-panel p-6">
           <div className="mb-5 flex items-center justify-between">
             <div>
@@ -301,7 +301,7 @@ export default function Dashboard() {
         </article>
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-[1.1fr_1.1fr_0.9fr]">
+      <section className="grid grid-cols-1 gap-6">
         <article className="tech-panel p-6">
           <div className="mb-5 flex items-center justify-between">
             <div>
