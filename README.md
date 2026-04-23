@@ -2,6 +2,8 @@
 
 Centralizador inteligente de projetos GitLab — acompanhe tudo em um só lugar, sem dor de cabeça.
 
+Decisao de projeto: [GitLab first, GitHub depois](docs/decisions/gitlab-first-strategy.md)
+
 📌 Sobre o Projeto
 
 O DevHub é uma aplicação web desenvolvida para reunir, organizar e exibir informações de projetos hospedados no GitLab.
