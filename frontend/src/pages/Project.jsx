@@ -55,9 +55,6 @@ export default function Project() {
                 <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
                     <div className="space-y-2">
                         <h1 className="page-title">Projetos conectados ao ecossistema do DevHub</h1>
-                        <p className="page-subtitle">
-                            Uma camada mais limpa para leitura rápida de ownership, atividade recente e visibilidade do workspace.
-                        </p>
                     </div>
 
                     <div className="tech-panel-muted flex items-center gap-3 px-4 py-3">
@@ -80,18 +77,6 @@ export default function Project() {
                         {type === "owned" ? "Meus projetos" : "Participando"}
                     </button>
                 ))}
-            </section>
-
-            <section className="tech-panel flex items-center justify-between gap-4 p-5">
-                <div>
-                    <p className="text-sm uppercase tracking-[0.2em] text-white/45">Resumo</p>
-                    <h2 className="mt-2 text-xl font-semibold text-white">Portfólio sincronizado</h2>
-                </div>
-
-                <div className="rounded-2xl border border-cyan-400/15 bg-cyan-400/10 px-4 py-3 text-right">
-                    <p className="text-xs uppercase tracking-[0.2em] text-cyan-200/70">Total</p>
-                    <p className="text-2xl font-bold text-cyan-300">{projects.length}</p>
-                </div>
             </section>
 
             <section className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
